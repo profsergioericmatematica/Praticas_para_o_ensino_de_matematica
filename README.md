@@ -37,7 +37,7 @@ Este projeto foi construído puramente com tecnologias web padrão (Vanilla), ga
 4. *(Recomendado)* Para que a função de abrir/baixar os PDFs locais funcione sem bloqueios de segurança dos navegadores, utilize uma extensão de servidor local, como o **Live Server** no VS Code.
 
 ## 👨‍🏫 Autor
-Desenvolvido com 💡 por **Prof. Sergio Eric** | Acompanhe no Instagram: [@prof.sergio.eric.matematica](https://instagram.com/prof.sergio.eric.matematica)
+Desenvolvido com 💡 por **Prof. Sergio Eric Reis de Oliveira** | Acompanhe no Instagram: [@prof.sergio.eric.matematica](https://instagram.com/prof.sergio.eric.matematica)
 
 ## 📄 Licença
 Este projeto está sob a licença MIT. Veja o ficheiro [LICENSE](LICENSE) para mais detalhes.
