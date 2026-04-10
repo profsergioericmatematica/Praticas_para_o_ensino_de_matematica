@@ -21,9 +21,7 @@
             min-height: 100vh;
         }
 
-        /* =========================================
-           NOVO: BOTÃO FLUTUANTE DE VOLTAR
-        ========================================= */
+        /* BOTÃO FLUTUANTE DE VOLTAR */
         .btn-voltar-fixo {
             position: fixed;
             bottom: 24px;
@@ -36,7 +34,7 @@
             font-weight: bold;
             font-size: 0.95rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 9999; /* Garante que fique por cima de tudo */
+            z-index: 9999;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -57,7 +55,7 @@
             }
         }
 
-        /* ESTILOS DO CABEÇALHO E RODAPÉ */
+        /* CABEÇALHO E RODAPÉ */
         .app-header {
             text-align: center;
             margin-bottom: 28px;
@@ -97,7 +95,7 @@
             text-decoration: underline;
         }
 
-        /* RESTANTE DO LAYOUT */
+        /* LAYOUT */
         .app-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -115,7 +113,7 @@
             border-radius: 2rem;
             box-shadow: 0 12px 28px rgba(0,0,0,0.08);
             overflow: hidden;
-            margin-bottom: 40px; /* Espaço para o botão flutuante não cobrir o conteúdo */
+            margin-bottom: 40px;
         }
 
         .tab-bar {
@@ -376,6 +374,60 @@
             margin-top: 0.5rem;
             font-size: 0.8rem;
         }
+
+        /* MAPA INTERATIVO (SUBSTITUIÇÃO) */
+        .sequencia-area {
+            background: #fefce8;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-top: 10px;
+            border-left: 6px solid #2c7da0;
+        }
+        .sequencia-header h3 {
+            font-size: 1.2rem;
+            color: #1f4e6e;
+            margin-bottom: 16px;
+        }
+        .sequencia-lista {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        .sequencia-item {
+            background: white;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border-radius: 1rem;
+            border-left: 4px solid #2c7da0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 20px;
+        }
+        .info-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #1e293b;
+        }
+        .info-btn:hover {
+            background: #e2edf2;
+            border-color: #2c7da0;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 780px) {
             .app-container { flex-direction: column; }
             .theory-panel { position: static; max-height: none; }
@@ -400,14 +452,15 @@
             <button class="tab-btn" data-tab="quiz">🎯 Quiz</button>
             <button class="tab-btn" data-tab="assoc">🔗 Associação</button>
             <button class="tab-btn" data-tab="comparativo">📊 Acadêmica vs Escolar</button>
+            <button class="tab-btn" data-tab="interativo">🧠 Mapa Interativo</button>
             <a href="SEP401_apostila_semana2.pdf" target="_blank" class="download-pdf" title="Abrir resumo Semana 2 em PDF">📄 Resumo S2 (PDF)</a>
         </div>
 
+        <!-- FLASHCARDS -->
         <div id="tabFlash" class="tab-content active-tab">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
                 <button id="resetFlashMode" class="mode-reset">🔄 Reiniciar Flashcards</button>
             </div>
-            
             <div class="flashcard-3d" id="flashcard3d">
                 <div class="flashcard-inner">
                     <div class="flash-front">
@@ -421,17 +474,14 @@
                     </div>
                 </div>
             </div>
-
-            <div style="text-align: center; margin-top: 15px; font-size: 0.95rem; font-weight: bold; color: #1f4e6e;" id="flashCounter">
-                1 / 24
-            </div>
-
+            <div style="text-align: center; margin-top: 15px; font-size: 0.95rem; font-weight: bold; color: #1f4e6e;" id="flashCounter"></div>
             <div class="flash-nav">
                 <button id="prevFlash">◀ Anterior</button>
                 <button id="nextFlash">Próxima ▶</button>
             </div>
         </div>
 
+        <!-- QUIZ -->
         <div id="tabQuiz" class="tab-content">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
                 <button id="resetQuizMode" class="mode-reset">🔄 Reiniciar Quiz</button>
@@ -453,6 +503,7 @@
             </div>
         </div>
 
+        <!-- ASSOCIAÇÃO -->
         <div id="tabAssoc" class="tab-content">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
                 <button id="resetAssocMode" class="mode-reset">🔄 Reiniciar Associação</button>
@@ -468,6 +519,7 @@
             </div>
         </div>
 
+        <!-- COMPARATIVO (Acadêmica vs Escolar) -->
         <div id="tabComparativo" class="tab-content">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
                 <button id="resetCompMode" class="mode-reset">🔄 Reiniciar</button>
@@ -482,10 +534,35 @@
                 Acertos: <span id="compHits">0</span> / <span id="compTotal">0</span>
             </div>
         </div>
+
+        <!-- MAPA INTERATIVO (substitui conteúdo a cada clique) -->
+        <div id="tabInterativo" class="tab-content">
+            <div class="button-grid">
+                <button class="info-btn" data-info="academica_escolar">📐 Matemática Acadêmica vs Escolar</button>
+                <button class="info-btn" data-info="transposicao">🔄 Transposição Didática (Chevallard)</button>
+                <button class="info-btn" data-info="construcao_autonoma">🏫 Construção Autônoma (Chervel)</button>
+                <button class="info-btn" data-info="prof_pesq">👨‍🏫 Conhecimento: Professor vs Pesquisador</button>
+                <button class="info-btn" data-info="shulman">📚 Shulman (PCK)</button>
+                <button class="info-btn" data-info="mkt">📊 MKT (Ball, Thames, Phelps)</button>
+                <button class="info-btn" data-info="mtsk">🧩 MTSK (Carrillo)</button>
+                <button class="info-btn" data-info="tpack">💻 TPACK (Mishra & Koehler)</button>
+                <button class="info-btn" data-info="saberes_acao">📖 Saberes da Ação Pedagógica (Gauthier)</button>
+                <button class="info-btn" data-info="nao_saberes">❌ Não Saberes (Moreira & David)</button>
+            </div>
+            <div class="sequencia-area">
+                <div class="sequencia-header">
+                    <h3>📌 Conteúdo selecionado</h3>
+                </div>
+                <div id="sequenciaLista" class="sequencia-lista">
+                    <div class="sequencia-item" style="color:#64748b;">Clique em um botão acima para ver o conteúdo.</div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- PAINEL TEÓRICO LATERAL (SEMANA 2) -->
     <div class="theory-panel">
-        <div class="theory-header">📖 Teoria completa (baseada nos PDFs)</div>
+        <div class="theory-header">📖 Síntese Teórica - Semana 2</div>
         <div class="theory-content">
             <div class="concept-grid">
                 <div class="concept-card"><strong>🧩 MTSK (Carrillo, 2013)</strong><br>KoT, KSM, KPM, KFLM, KMT, KMLS – Conhecimento matemático e didático especializado.</div>
@@ -515,7 +592,7 @@
 </footer>
 
 <script>
-    // ===================== DADOS COMPLETOS =====================
+    // ===================== DADOS FLASHCARDS (SEMANA 2) =====================
     const siglasData = [
         { sigla: "KoT", nome: "Knowledge of Topics", desc: "Domínio do conteúdo matemático: algoritmos, propriedades, fenomenologia.", exemplo: "Resolver equações do 2º grau." },
         { sigla: "KSM", nome: "Knowledge of Structure", desc: "Conexões entre diferentes áreas da matemática.", exemplo: "Funções e PA são a mesma ideia." },
@@ -543,7 +620,7 @@
         { sigla: "Componentes Cognitivas TPACK", nome: "Niess", desc: "Conceções, currículo, aprendizagem e ensino para integrar tecnologia.", exemplo: "Planejar aula com tecnologia considerando os quatro aspectos." }
     ];
 
-    // ===================== QUIZ =====================
+    // ===================== QUIZ (SEMANA 2) =====================
     const quizQuestions = [
         { text: "Você resolve no quadro uma equação do 2º grau e domina perfeitamente as regras de sinais e propriedades das raízes.", correct: "KoT", options: ["KoT", "KMT", "KFLM", "KSM"], hint: "Domínio do conteúdo em si.", explanation: "KoT – conhecimento dos tópicos matemáticos puros (MTSK)." },
         { text: "Cria um jogo digital temático de exploração de dados para aumentar o engajamento nas aulas de estatística.", correct: "KMT", options: ["KMT", "KoT", "KMLS", "TPK"], hint: "Estratégia de ensino lúdica.", explanation: "KMT – conhecimento do ensino da matemática." },
@@ -567,6 +644,26 @@
         { text: "Componente do TPACK que envolve estratégias específicas para ensinar matemática com tecnologia.", correct: "Ensino", options: ["Ensino", "Conceições", "Currículo", "Aprendizagem"], hint: "Quarta componente de Niess.", explanation: "Ensino – conhecimento de metodologias e estratégias com integração tecnológica." }
     ];
 
+    // ===================== DADOS ASSOCIAÇÃO (reutiliza siglasData) =====================
+    const assocList = [...siglasData];
+
+    // ===================== COMPARATIVO (Acadêmica vs Escolar) =====================
+    const comparativoData = [
+        { conceito: "Transposição Didática (Chevallard)", definicao: "Transformação do saber acadêmico em saber escolar, sujeito a vigilância epistemológica." },
+        { conceito: "Construção Autônoma (Chervel)", definicao: "Disciplina escolar é criação endógena da escola, com lógica própria." },
+        { conceito: "Matemática Acadêmica", definicao: "Rigor lógico-dedutivo, demonstrações formais, estruturas abstratas." },
+        { conceito: "Matemática Escolar", definicao: "Saberes validados para educação básica, com foco na compreensão do aluno." },
+        { conceito: "Papel do erro na Academia", definicao: "Erro é fenômeno lógico que indica contradição com fato verdadeiro." },
+        { conceito: "Papel do erro na Escola", definicao: "Erro é indicador didático-pedagógico, fundamental para o planejamento." },
+        { conceito: "Conhecimento do Professor", definicao: "Prático, orientado à ação, validado pela eficácia em sala de aula." },
+        { conceito: "Conhecimento do Pesquisador", definicao: "Teórico, formal, validado pela coerência lógica e conceitual." },
+        { conceito: "Vigilância Epistemológica", definicao: "Monitoramento crítico para evitar distorções conceituais na transposição didática." },
+        { conceito: "Não Saberes (decimais)", definicao: "Professor que vê decimal apenas como representação, sem entender sua centralidade na escola." }
+    ];
+
+    // ===================== FUNÇÕES AUXILIARES =====================
+    function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+
     // ===================== FLASHCARDS =====================
     let flashIndex = 0, isFlipped = false;
     const flashContainer = document.getElementById('flashcard3d');
@@ -582,25 +679,20 @@
         backSigla.innerText = `${item.sigla} – ${item.nome}`;
         backDesc.innerText = item.desc;
         backExample.innerText = `📘 Exemplo: ${item.exemplo}`;
-        
         flashCounter.innerText = `${flashIndex + 1} / ${siglasData.length}`;
-
         if (isFlipped) { flashContainer.classList.remove('flipped'); isFlipped = false; }
     }
-    
     function flipCard() { flashContainer.classList.toggle('flipped'); isFlipped = !isFlipped; }
     function prevFlash() { flashIndex = (flashIndex - 1 + siglasData.length) % siglasData.length; updateFlash(); }
     function nextFlash() { flashIndex = (flashIndex + 1) % siglasData.length; updateFlash(); }
     function resetFlash() { flashIndex = 0; updateFlash(); if(isFlipped) flipCard(); }
-    
     document.getElementById('prevFlash').onclick = prevFlash;
     document.getElementById('nextFlash').onclick = nextFlash;
     document.getElementById('resetFlashMode').onclick = resetFlash;
     flashContainer.onclick = flipCard;
-    
     updateFlash();
 
-    // ===================== QUIZ LOGIC =====================
+    // ===================== QUIZ =====================
     let quizCurrent = 0, quizHits = 0, quizAnswered = false;
     const quizTotal = quizQuestions.length;
     const scenarioDiv = document.getElementById('scenarioCard');
@@ -680,7 +772,7 @@
     resetQuizBtn.onclick = resetQuiz;
     loadQuiz();
 
-    // ===================== ASSOCIAÇÃO LOGIC =====================
+    // ===================== ASSOCIAÇÃO =====================
     let assocIndex = 0, assocHits = 0, assocAnsweredFlag = false;
     const assocSiglaSpan = document.getElementById('assocSigla');
     const assocOptionsDiv = document.getElementById('assocOptions');
@@ -689,10 +781,8 @@
     const assocHitsSpan = document.getElementById('assocHits');
     const assocTotalSpan = document.getElementById('assocTotal');
     const resetAssocBtn = document.getElementById('resetAssocMode');
-    const assocList = [...siglasData];
     assocTotalSpan.innerText = assocList.length;
 
-    function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
     function loadAssociation() {
         assocAnsweredFlag = false;
         const current = assocList[assocIndex];
@@ -731,19 +821,7 @@
     resetAssocBtn.onclick = resetAssoc;
     loadAssociation();
 
-    // ===================== COMPARATIVO LOGIC =====================
-    const comparativoData = [
-        { conceito: "Transposição Didática (Chevallard)", definicao: "Transformação do saber acadêmico em saber escolar, sujeito a vigilância epistemológica." },
-        { conceito: "Construção Autônoma (Chervel)", definicao: "Disciplina escolar é criação endógena da escola, com lógica própria." },
-        { conceito: "Matemática Acadêmica", definicao: "Rigor lógico-dedutivo, demonstrações formais, estruturas abstratas." },
-        { conceito: "Matemática Escolar", definicao: "Saberes validados para educação básica, com foco na compreensão do aluno." },
-        { conceito: "Papel do erro na Academia", definicao: "Erro é fenômeno lógico que indica contradição com fato verdadeiro." },
-        { conceito: "Papel do erro na Escola", definicao: "Erro é indicador didático-pedagógico, fundamental para o planejamento." },
-        { conceito: "Conhecimento do Professor", definicao: "Prático, orientado à ação, validado pela eficácia em sala de aula." },
-        { conceito: "Conhecimento do Pesquisador", definicao: "Teórico, formal, validado pela coerência lógica e conceitual." },
-        { conceito: "Vigilância Epistemológica", definicao: "Monitoramento crítico para evitar distorções conceituais na transposição didática." },
-        { conceito: "Não Saberes (decimais)", definicao: "Professor que vê decimal apenas como representação, sem entender sua centralidade na escola." }
-    ];
+    // ===================== COMPARATIVO (Acadêmica vs Escolar) =====================
     let compIndex = 0, compHits = 0, compAnsweredFlag = false;
     const compConceptSpan = document.getElementById('compConcept');
     const compOptionsDiv = document.getElementById('compOptions');
@@ -791,7 +869,35 @@
     resetCompBtn.onclick = resetComparativo;
     loadComparativo();
 
-    // TABS LOGIC
+    // ===================== MAPA INTERATIVO (SUBSTITUI A CADA CLIQUE) =====================
+    const conteudosMapa = {
+        academica_escolar: "📐 Matemática Acadêmica vs Escolar (Moreira e David):<br>• Acadêmica: rigor lógico-dedutivo, definições formais, demonstração como garantia de validade, erro como fenômeno lógico (contradição).<br>• Escolar: definições descritivas e acessíveis, demonstrações com papéis pedagógicos (construir visão da disciplina, desenvolver argumentação), erro como fenômeno psicológico (indicador didático-pedagógico).",
+        transposicao: "🔄 Transposição Didática (Chevallard, 1991):<br>• Saber sábio → saber a ensinar → saber ensinado.<br>• Vigilância epistemológica (evitar distorções conceituais).<br>• Crítica: reduz matemática escolar a adaptação da científica.",
+        construcao_autonoma: "🏫 Construção Autônoma (Chervel, 1990):<br>• Disciplina escolar criada na escola, pela escola, para a escola (entidade sui generis).<br>• Crítica: negligencia condicionamentos externos.<br>• Moreira & David (síntese): matemática escolar como construção histórica sob múltiplos condicionantes (internos e externos).",
+        prof_pesq: "👨‍🏫 Conhecimento: Professor vs Pesquisador:<br>• Professor: prático, orientado à ação, validado pela eficácia em sala de aula.<br>• Pesquisador: teórico, formal, validado pela coerência lógica.",
+        shulman: "📚 Modelo Shulman (1987) – PCK:<br>• Knowledge Base for Teaching.<br>• PCK (Pedagogical Content Knowledge): conhecimento didático do conteúdo.<br>• Limitação: natureza genérica, não específica para matemática.",
+        mkt: "📊 Modelo MKT (Ball, Thames & Phelps, 2008):<br>• Mathematical Knowledge for Teaching (Conhecimento Matemático para o Ensino).<br>• Subdomínios: CCK (comum), SCK (especializado), KCS (alunos+conteúdo), KCT (ensino+conteúdo), KC (currículo), HCK (visão conectada).<br>• Limitação: dificuldade em demarcar limites entre subdomínios.",
+        mtsk: "🧩 Modelo MTSK (Carrillo et al., 2013):<br>• Mathematics Teacher's Specialized Knowledge.<br>• Integração entre saber matemático e saber didático (não é simples soma).<br>• Domínio Matemático (MK): KoT (tópicos), KSM (estrutura), KPM (práticas).<br>• Domínio Didático (PCK): KFLM (erros), KMT (estratégias), KMLS (currículo).<br>• Crenças no centro – avanço em relação ao MKT.",
+        tpack: "💻 Modelo TPACK (Mishra & Koehler, 2006):<br>• Bases: CK (conteúdo), PK (pedagogia), TK (tecnologia).<br>• Intersecções: PCK, TCK (tecnologia+conteúdo – representações de conceitos), TPK (tecnologia+pedagogia – como a tecnologia afeta os métodos de ensino).<br>• Integração total: TPACK – escolha da tecnologia articulada com método pedagógico.<br>• Componentes cognitivas (Niess, 2012): Conceições, Currículo, Aprendizagem, Ensino.<br>• TPACK é conhecimento complexo, dinâmico e flexível (Gutiérrez-Fallas & Henriques).",
+        saberes_acao: "📖 Saberes da Ação Pedagógica (Gauthier et al., 1998):<br>• Gestão da Classe e Gestão da Matéria.<br>• Subcategorias: planejamento, interação com alunos, avaliação.<br>• Pesquisa não determina a ação, mas informa e leva à reflexão.",
+        nao_saberes: "❌ Não Saberes (Moreira & David):<br>• Lacunas da formação inicial que a prática por si só não resolve.<br>• Exemplo dos decimais:<br>&nbsp;&nbsp;- Visão acadêmica: decimal é apenas representação de número real.<br>&nbsp;&nbsp;- Visão escolar: decimal é o número (em certas situações).<br>&nbsp;&nbsp;- Professor com percepção confusa = 'não saber'.<br>&nbsp;&nbsp;- Tratar como falha conceitual desvia a formação para o abstrato."
+    };
+
+    const listaSeq = document.getElementById('sequenciaLista');
+    function mostrarConteudo(texto) {
+        listaSeq.innerHTML = `<div class="sequencia-item">${texto}</div>`;
+        listaSeq.scrollTop = 0;
+    }
+    document.querySelectorAll('#tabInterativo .info-btn').forEach(btn => {
+        const key = btn.getAttribute('data-info');
+        if(key && conteudosMapa[key]) {
+            btn.addEventListener('click', () => {
+                mostrarConteudo(conteudosMapa[key]);
+            });
+        }
+    });
+
+    // ===================== TABS (Navegação entre abas internas) =====================
     const tabs = document.querySelectorAll('.tab-btn');
     const contents = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => {
