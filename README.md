@@ -63,12 +63,19 @@ Este projeto foi construído puramente com tecnologias web padrão (Vanilla), ga
 ## 📁 Estrutura de arquivos 
 
 projeto/
+
 |-- index.html
+
 |-- semana1.html
+
 |-- semana2.html
+
 |-- SEP401_apostila_semana1.pdf
+
 |-- SEP401_apostila_semana2.pdf
+
 |-- README.md
+
 
 ## 👨‍🏫 Autor
 Desenvolvido com 💡 por **Prof. Sergio Eric Reis de Oliveira** | Acompanhe no Instagram: [@prof.sergio.eric.matematica](https://instagram.com/prof.sergio.eric.matematica)
