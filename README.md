@@ -3,7 +3,7 @@
 Uma aplicação web interativa e gamificada desenvolvida para auxiliar estudantes na revisão e fixação dos conceitos teóricos da disciplina **Práticas para o Ensino de Matemática I** do curso de licenciatura da **UNIVESP**.
 
 ## 🎯 Objetivo do Projeto
-Transformar o estudo teórico de metodologias, história da educação matemática e taxonomias do conhecimento docente (como MTSK, MKT e TPACK) em uma experiência dinâmica. O projeto substitui a leitura passiva por atividades ativas, utilizando metodologias de gamificação.
+Transformar o estudo teórico de metodologias, história da educação matemática e taxonomias do conhecimento docente (como MTSK, MKT e TPACK) em uma experiência dinâmica. O projeto substitui a leitura passiva por atividades ativas, utilizando metodologias de gamificação e navegação interativa.
 
 ## 📚 Estrutura do Curso
 O conteúdo da aplicação está organizado ao longo de 7 semanas de estudo, cobrindo os seguintes temas:
@@ -15,26 +15,61 @@ O conteúdo da aplicação está organizado ao longo de 7 semanas de estudo, cob
 * **Semana 6:** Estudos e práticas pedagógicas de grandezas e medidas
 * **Semana 7:** Problematizações em contextos de probabilidade e estatística que refletem nas práticas pedagógicas
 
+> **Nota:** As semanas 3 a 7 estão em desenvolvimento (páginas em construção no menu principal).
+
 ## ✨ Funcionalidades
-O aplicativo é dividido por semanas de estudo, onde cada semana oferece:
-* **📇 Flashcards 3D:** Cartões interativos de frente e verso para memorização ativa de siglas, conceitos e tendências pedagógicas.
-* **🎯 Quiz Interativo:** Questões de múltipla escolha focadas na aplicação prática da teoria, com sistema de dicas, feedback imediato e explicações detalhadas.
-* **🔗 Jogo de Associação:** Atividade rápida para relacionar definições a seus respectivos conceitos ou autores.
-* **📊 Painel Comparativo:** Exercícios de classificação (ex: separar discursos críticos de economicistas, ou Matemática Escolar vs. Acadêmica).
-* **📖 Síntese Teórica:** Um painel lateral de consulta rápida com os resumos essenciais dos textos base e videoaulas.
-* **📄 Download de Resumos (PDF):** Acesso rápido aos resumos gerados em LaTeX padronizados para impressão.
+O aplicativo é dividido por semanas de estudo, onde cada semana (1 e 2) oferece um conjunto completo de ferramentas de aprendizagem:
+
+### 📇 Flashcards 3D
+Cartões interativos de frente e verso para memorização ativa de siglas, conceitos, tendências pedagógicas e gerações da profissão docente. Basta clicar no cartão para virar e conferir a resposta.
+
+### 🎯 Quiz Interativo
+Questões de múltipla escolha focadas na aplicação prática da teoria, com sistema de dicas, feedback imediato e explicações detalhadas. A pontuação e o número de questões restantes são exibidos em tempo real.
+
+### 🔗 Jogo de Associação
+Atividade rápida para relacionar definições a seus respectivos conceitos ou autores. O usuário deve escolher a opção correta entre as alternativas apresentadas.
+
+### 📊 Painel Comparativo
+Exercícios de classificação específicos para cada semana:
+- **Semana 1:** Discursos Economicista vs. Crítico sobre avaliações em larga escala.
+- **Semana 2:** Conceitos de Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, entre outros.
+
+### 🧠 Mapa Interativo (NOVO!)
+Um sistema de **botões clicáveis** que exibe, sob demanda, conteúdos detalhados sobre cada tópico da semana.  
+- **Semana 1:** botões para Tataravô, Bisavô, Avô, Pai, todas as tendências pedagógicas (Formalista Clássica, Empírico-Ativista, etc.), SAEB, TIMSS 2023, discursos sobre avaliação, Escuta Nacional de Professores (2025) e Políticas Públicas (PNE).  
+- **Semana 2:** botões para Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, Professor vs. Pesquisador, Modelos Shulman, MKT, MTSK, TPACK, Saberes da Ação Pedagógica e Não Saberes.  
+
+**Diferencial:** Cada clique **substitui** o conteúdo exibido anteriormente (não acumula), mantendo a área de visualização sempre limpa e focada no último tópico selecionado. Não há botão de "limpar" – a própria substituição já organiza o estudo por tópico.
+
+### 📖 Síntese Teórica
+Um painel lateral de consulta rápida com os resumos essenciais dos textos base e videoaulas, disponível em ambas as semanas.
+
+### 📄 Download de Resumos (PDF)
+Acesso rápido aos resumos gerados em LaTeX padronizados para impressão (arquivos `SEP401_apostila_semana1.pdf` e `SEP401_apostila_semana2.pdf`).
 
 ## 🛠️ Tecnologias Utilizadas
 Este projeto foi construído puramente com tecnologias web padrão (Vanilla), garantindo leveza e fácil hospedagem:
-* **HTML5:** Estruturação semântica.
-* **CSS3:** Estilização responsiva (Mobile First), layouts com Flexbox/Grid e animações 3D nativas.
-* **JavaScript:** Lógica de manipulação do DOM, controle de pontuações, embaralhamento de questões e navegação por abas.
+* **HTML5:** Estruturação semântica e suporte a áudio (para feedback sonoro opcional).
+* **CSS3:** Estilização responsiva (Mobile First), layouts com Flexbox/Grid, animações 3D nativas e efeitos visuais de transição.
+* **JavaScript:** Lógica de manipulação do DOM, controle de pontuações, embaralhamento de questões, navegação por abas e substituição dinâmica de conteúdo no Mapa Interativo.
 
 ## 🚀 Como executar o projeto
 1. Faça o clone ou download deste repositório.
 2. Não é necessária nenhuma instalação ou configuração de servidor complexo.
-3. Basta abrir o ficheiro `index.html` em qualquer navegador moderno.
+3. Basta abrir o ficheiro `index.html` em qualquer navegador moderno (Chrome, Firefox, Edge, Safari).
 4. *(Recomendado)* Para que a função de abrir/baixar os PDFs locais funcione sem bloqueios de segurança dos navegadores, utilize uma extensão de servidor local, como o **Live Server** no VS Code.
+5. Navegue entre as semanas clicando nos botões do menu principal e, dentro de cada semana, explore as abas (Flashcards, Quiz, Associação, Comparativo, Mapa Interativo).
+
+## 📁 Estrutura de arquivos 
+
+
+projeto/
+    index.html
+    semana1.html
+    semana2.html
+    SEP401_apostila_semana1.pdf
+    SEP401_apostila_semana2.pdf
+    README.md
 
 ## 👨‍🏫 Autor
 Desenvolvido com 💡 por **Prof. Sergio Eric Reis de Oliveira** | Acompanhe no Instagram: [@prof.sergio.eric.matematica](https://instagram.com/prof.sergio.eric.matematica)
