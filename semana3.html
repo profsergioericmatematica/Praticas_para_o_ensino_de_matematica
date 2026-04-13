@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Práticas para o Ensino da Matemática I - Univesp | Semana 3</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #eef2f8; padding: 24px 16px; color: #1a2c3e;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        .btn-voltar-fixo {
+            position: fixed; bottom: 24px; left: 24px; background: #1f4e6e; color: white;
+            padding: 12px 20px; border-radius: 40px; text-decoration: none; font-weight: bold;
+            font-size: 0.95rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999;
+            display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;
+        }
+        .btn-voltar-fixo:hover { background: #2c7da0; transform: translateY(-3px); }
+        @media (max-width: 780px) { .btn-voltar-fixo { bottom: 16px; left: 16px; padding: 10px 16px; font-size: 0.85rem; } }
+        .app-header { text-align: center; margin-bottom: 28px; padding: 0 16px; }
+        .app-header h1 { color: #1f4e6e; font-size: 1.8rem; margin-bottom: 8px; font-weight: 800; }
+        .app-header h2 { color: #2c7da0; font-size: 1.15rem; font-weight: 500; }
+        .app-footer { margin-top: auto; text-align: center; padding: 24px 16px 16px; font-size: 0.95rem; color: #334155; }
+        .app-footer a { color: #1f7a5a; text-decoration: none; font-weight: bold; }
+        .app-container { max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; width: 100%; }
+        .main-panel { flex: 2; min-width: 280px; background: white; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 40px; }
+        .tab-bar { display: flex; flex-wrap: wrap; background: #f1f5f9; border-bottom: 1px solid #cbd5e1; }
+        .tab-btn { flex: 1; padding: 12px 8px; font-weight: bold; background: transparent; border: none; cursor: pointer; font-size: 0.9rem; transition: 0.2s; color: #334155; }
+        .tab-btn.active { background: white; color: #0f2b3d; border-bottom: 3px solid #2c7da0; }
+        .download-pdf { background: #2c7da0; color: white; border: none; border-radius: 40px; padding: 6px 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin: 8px 12px 8px auto; display: flex; align-items: center; gap: 6px; text-decoration: none; }
+        .download-pdf:hover { background: #1f5e7a; }
+        .tab-content { padding: 1.8rem; display: none; }
+        .tab-content.active-tab { display: block; }
+        /* Flashcard 3D */
+        .flashcard-3d { background-color: transparent; width: 100%; min-height: 320px; perspective: 1000px; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; min-height: 320px; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 1.5rem; }
+        .flashcard-3d.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flash-front, .flash-back { position: absolute; width: 100%; min-height: 320px; backface-visibility: hidden; border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .flash-front { background: #f8fafd; border: 2px solid #e2edf2; color: #1f4e6e; }
+        .flash-back { background: #1f4e6e; color: white; transform: rotateY(180deg); border: 2px solid #2c7da0; }
+        .flash-sigla { font-size: 1.8rem; font-weight: 800; }
+        .flash-desc { font-size: 0.9rem; margin-top: 1rem; line-height: 1.4; }
+        .flash-example { font-size: 0.8rem; margin-top: 1rem; font-style: italic; }
+        .flash-nav { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .flash-nav button, .mode-reset { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-weight: 500; }
+        .mode-reset { background: #cbd5e1; margin-left: 12px; }
+        .scenario-card { background: #f8fafd; border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; border-left: 6px solid #2c7da0; font-size: 1rem; font-weight: 500; }
+        .btn-hint { background: #ffecb3; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; margin-right: 8px; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 1.5rem 0; }
+        .option-btn { background: white; border: 1.5px solid #cbd5e1; border-radius: 60px; padding: 12px; font-weight: 500; font-size: 0.85rem; cursor: pointer; text-align: center; }
+        .option-btn:hover { background: #e2edf2; border-color: #2c7da0; }
+        .feedback-area { background: #f1f5f9; border-radius: 1.2rem; padding: 1rem; margin-top: 1rem; }
+        .explanation { display: none; background: #e9f4fe; padding: 1rem; border-radius: 1rem; margin-top: 0.8rem; font-size: 0.9rem; }
+        .next-btn { background: #1f7a5a; color: white; border: none; border-radius: 40px; padding: 10px 24px; font-weight: bold; cursor: pointer; margin-top: 1rem; display: none; width: 100%; }
+        .score-bar { display: flex; justify-content: space-between; background: #eef2f5; border-radius: 60px; padding: 10px 18px; margin-top: 20px; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .theory-panel { flex: 1.2; min-width: 260px; background: white; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.08); position: sticky; top: 20px; max-height: 85vh; overflow-y: auto; }
+        .theory-header { background: #1f4e6e; color: white; padding: 1rem 1.5rem; border-radius: 2rem 2rem 0 0; font-weight: bold; }
+        .theory-content { padding: 1.2rem 1.5rem; }
+        .concept-grid { display: grid; gap: 12px; font-size: 0.85rem; margin-bottom: 1rem; }
+        .concept-card { background: #f8fafc; padding: 12px; border-radius: 16px; border-left: 4px solid #2c7da0; line-height: 1.4; }
+        .gold-dicas { background: #fef7e0; border-radius: 1rem; padding: 1rem; margin-top: 0.5rem; font-size: 0.85rem; }
+        /* Mapa Interativo */
+        .sequencia-area { background: #fefce8; border-radius: 1.5rem; padding: 1.2rem; margin-top: 10px; border-left: 6px solid #2c7da0; }
+        .sequencia-header h3 { font-size: 1.2rem; color: #1f4e6e; margin-bottom: 16px; }
+        .sequencia-lista { max-height: 400px; overflow-y: auto; padding-right: 8px; }
+        .sequencia-item { background: white; padding: 12px 16px; margin-bottom: 10px; border-radius: 1rem; border-left: 4px solid #2c7da0; font-size: 0.9rem; position: relative; }
+        .btn-nota { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px; vertical-align: middle; }
+        .nota-texto { display: block; margin-top: 8px; font-size: 0.8rem; background: #fef7e0; padding: 8px; border-radius: 8px; }
+        .button-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
+        .info-btn { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 40px; padding: 8px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .info-btn:hover { background: #e2edf2; border-color: #2c7da0; transform: translateY(-2px); }
+        .categoria-titulo { font-weight: bold; margin: 15px 0 8px 0; color: #1f4e6e; width: 100%; border-left: 3px solid #2c7da0; padding-left: 8px; }
+        /* confete */
+        @keyframes confete { 0% { opacity: 1; transform: translateY(0) rotate(0deg); } 100% { opacity: 0; transform: translateY(-100px) rotate(720deg); } }
+        .confete { position: fixed; bottom: 0; left: 50%; width: 10px; height: 10px; background: gold; animation: confete 1s ease-out forwards; pointer-events: none; z-index: 10000; }
+        button:focus-visible, a:focus-visible { outline: 2px solid #2c7da0; outline-offset: 2px; }
+        @media (max-width: 780px) { .app-container { flex-direction: column; } .theory-panel { position: static; max-height: none; } }
+        @media (max-width: 320px) { .info-btn { min-width: 120px; font-size: 0.75rem; padding: 6px 12px; } .tab-btn { font-size: 0.75rem; padding: 8px 4px; } }
+    </style>
+</head>
+<body>
+<a href="index.html" class="btn-voltar-fixo" aria-label="Voltar ao menu principal">⬅️ Voltar ao Menu</a>
+<header class="app-header">
+    <h1>Práticas para o Ensino da Matemática I - Univesp</h1>
+    <h2>Semana 3 - O sentido dos números e das operações no currículo e nas práticas pedagógicas</h2>
+    <div style="margin-top: 10px;"><button id="audioToggleBtn" aria-label="Ativar/desativar sons" style="background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer;">🔊 Som ativado</button></div>
+</header>
+<div class="app-container">
+    <div class="main-panel">
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="flash">📇 Flashcards</button>
+            <button class="tab-btn" data-tab="quiz">🎯 Quiz</button>
+            <button class="tab-btn" data-tab="assoc">🔗 Associação</button>
+            <button class="tab-btn" data-tab="comparativo">📊 Comparativo (Algoritmo x Decomposição)</button>
+            <button class="tab-btn" data-tab="interativo">🧠 Mapa Interativo</button>
+            <a href="SEP401_apostila_semana3.pdf" target="_blank" class="download-pdf" title="Abrir resumo Semana 3 em PDF">📄 Resumo S3 (PDF)</a>
+        </div>
+
+        <!-- FLASHCARDS -->
+        <div id="tabFlash" class="tab-content active-tab">
+            <div style="display: flex; justify-content: flex-end;"><button id="resetFlashMode" class="mode-reset">🔄 Reiniciar Flashcards</button></div>
+            <div class="flashcard-3d" id="flashcard3d" tabindex="0" role="button">
+                <div class="flashcard-inner">
+                    <div class="flash-front"><div class="flash-sigla" id="frontSigla">Carregando...</div><div class="flash-desc">Clique para virar</div></div>
+                    <div class="flash-back"><div class="flash-sigla" id="backSigla"></div><div class="flash-desc" id="backDesc"></div><div class="flash-example" id="backExample"></div></div>
+                </div>
+            </div>
+            <div id="flashCounter" style="text-align:center; margin-top:15px;"></div>
+            <div class="flash-nav"><button id="prevFlash">◀ Anterior</button><button id="nextFlash">Próxima ▶</button></div>
+        </div>
+
+        <!-- QUIZ -->
+        <div id="tabQuiz" class="tab-content">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                <button id="resetQuizMode" class="mode-reset">🔄 Reiniciar Quiz</button>
+                <button id="revisarErrosBtn" class="mode-reset" style="display: none;">📚 Revisar erros</button>
+            </div>
+            <div id="scenarioCard" class="scenario-card">Carregando...</div>
+            <div><button id="hintBtn" class="btn-hint">💡 Dica</button><div id="hintBox" style="background:#fff8e7; padding:0.5rem; border-radius:1rem; display:none; margin-top:0.5rem;"></div></div>
+            <div id="optionsContainer" class="options-grid"></div>
+            <div class="feedback-area"><div id="feedbackMsg" class="feedback-text"></div><div id="explanationBox" class="explanation"></div><button id="nextBtn" class="next-btn">➡️ Próxima questão</button></div>
+            <div class="score-bar"><span>✅ Acertos: <span id="hitsCount">0</span></span><span>📋 Restantes: <span id="remainingCount">0</span></span></div>
+            <div id="quizConcluidoMsg" style="display: none; margin-top: 15px; background: #d4edda; padding: 10px; border-radius: 12px; text-align: center;">🏆 Parabéns! Você concluiu o quiz. Use "Revisar erros" para fixar.</div>
+        </div>
+
+        <!-- ASSOCIAÇÃO -->
+        <div id="tabAssoc" class="tab-content">
+            <div style="display: flex; justify-content: flex-end;"><button id="resetAssocMode" class="mode-reset">🔄 Reiniciar Associação</button></div>
+            <div id="assocQuestion" class="scenario-card">Relacione o conceito: <br><br><strong id="assocSigla"></strong></div>
+            <div id="assocOptions" class="options-grid"></div>
+            <div id="assocFeedback" class="feedback-text" style="margin-top:1rem;"></div>
+            <button id="nextAssoc" class="next-btn" style="display:block; background:#2c7da0;">Próxima associação ➡️</button>
+            <div style="margin-top:12px;">Acertos: <span id="assocHits">0</span> / <span id="assocTotal">0</span></div>
+        </div>
+
+        <!-- COMPARATIVO (Algoritmo Tradicional vs Decomposição) -->
+        <div id="tabComparativo" class="tab-content">
+            <div style="display: flex; justify-content: flex-end;"><button id="resetCompMode" class="mode-reset">🔄 Reiniciar</button></div>
+            <div id="compQuestion" class="scenario-card"><strong>📌 Analise a afirmação sobre algoritmos:</strong><br><br><span id="compConcept"></span></div>
+            <div id="compOptions" class="options-grid"></div>
+            <div id="compFeedback" class="feedback-text" style="margin-top:1rem;"></div>
+            <button id="nextComp" class="next-btn" style="display:block; background:#2c7da0;">Próxima ➡️</button>
+            <div style="margin-top:12px;">Acertos: <span id="compHits">0</span> / <span id="compTotal">0</span></div>
+        </div>
+
+        <!-- MAPA INTERATIVO -->
+        <div id="tabInterativo" class="tab-content">
+            <div class="button-grid">
+                <div class="categoria-titulo">🔢 Sistema de Numeração Decimal</div>
+                <button class="info-btn" data-info="snd">SND: definição e propriedades</button>
+                <button class="info-btn" data-info="valor_abs_rel">Valor absoluto vs relativo</button>
+                <button class="info-btn" data-info="propriedades_snd">Propriedades: posicional, multiplicativa, aditiva</button>
+                <div class="categoria-titulo">🧠 Sentidos do Número</div>
+                <button class="info-btn" data-info="cardinal">Cardinal</button>
+                <button class="info-btn" data-info="ordinal">Ordinal</button>
+                <button class="info-btn" data-info="medida">Medida</button>
+                <button class="info-btn" data-info="nominal">Nominal (identificação)</button>
+                <button class="info-btn" data-info="estimativa">Estimativa</button>
+                <div class="categoria-titulo">➕ Sentidos da Adição</div>
+                <button class="info-btn" data-info="adicao_juntar">Juntar</button>
+                <button class="info-btn" data-info="adicao_acrescentar">Acrescentar</button>
+                <div class="categoria-titulo">➖ Sentidos da Subtração</div>
+                <button class="info-btn" data-info="subtracao_retirar">Retirar</button>
+                <button class="info-btn" data-info="subtracao_completar">Completar</button>
+                <button class="info-btn" data-info="subtracao_comparar">Comparar</button>
+                <div class="categoria-titulo">✖️ Sentidos da Multiplicação</div>
+                <button class="info-btn" data-info="mult_parcelas_iguais">Adição de parcelas iguais</button>
+                <button class="info-btn" data-info="mult_config_retangular">Configuração retangular (discreta/contínua)</button>
+                <button class="info-btn" data-info="mult_combinatoria">Combinatória</button>
+                <div class="categoria-titulo">➗ Sentidos da Divisão</div>
+                <button class="info-btn" data-info="div_partilha">Partilha equitativa</button>
+                <button class="info-btn" data-info="div_medida">Medida (quantas vezes cabe)</button>
+                <div class="categoria-titulo">🛠️ Recursos e Práticas</div>
+                <button class="info-btn" data-info="algoritmo_tradicional">Algoritmo tradicional (críticas)</button>
+                <button class="info-btn" data-info="decomposicao">Decomposição como estratégia</button>
+                <button class="info-btn" data-info="tampinhas">Tampinhas coloridas (potencialidades e limites)</button>
+                <button class="info-btn" data-info="material_dourado">Material dourado e ábaco</button>
+            </div>
+            <div class="sequencia-area">
+                <div class="sequencia-header"><h3>📌 Conteúdo selecionado</h3></div>
+                <div id="sequenciaLista" class="sequencia-lista"><div class="sequencia-item" style="color:#64748b;">Clique em um botão acima para ver o conteúdo.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAINEL TEÓRICO LATERAL -->
+    <div class="theory-panel">
+        <div class="theory-header">📖 Síntese Teórica - Semana 3</div>
+        <div class="theory-content">
+            <div class="concept-grid">
+                <div class="concept-card"><strong>🔢 SND:</strong> Sistema posicional, multiplicativo e aditivo. Valor absoluto (próprio algarismo) e valor relativo (posição).</div>
+                <div class="concept-card"><strong>🧠 Sentidos do Número:</strong> Cardinal, ordinal, medida, nominal, estimativa.</div>
+                <div class="concept-card"><strong>➕ Adição:</strong> Juntar (reunião de conjuntos) e acrescentar (acréscimo).</div>
+                <div class="concept-card"><strong>➖ Subtração:</strong> Retirar, completar (quanto falta), comparar (diferença).</div>
+                <div class="concept-card"><strong>✖️ Multiplicação:</strong> Adição de parcelas iguais, configuração retangular (discreta/contínua), combinatória.</div>
+                <div class="concept-card"><strong>➗ Divisão:</strong> Partilha equitativa (dividir em partes iguais) e medida (quantas vezes cabe).</div>
+                <div class="concept-card"><strong>🔄 Algoritmo vs Decomposição:</strong> Decomposição respeita o valor posicional e evita frases como "vai um" ou "empresta um".</div>
+                <div class="concept-card"><strong>🛠️ Recursos:</strong> Tampinhas coloridas (atribuição de valor por cor, não exige posicionalidade), material dourado (agrupamentos), ábaco.</div>
+            </div>
+            <div class="gold-dicas">💡 Dicas: Evite “vai um” – prefira “10 unidades formam 1 dezena”. Use decomposições variadas para dar sentido ao algoritmo. Explore todos os sentidos das operações.</div>
+        </div>
+    </div>
+</div>
+<footer class="app-footer">
+    Desenvolvido por Prof. Sergio Eric | Instagram: <a href="https://instagram.com/prof.sergio.eric.matematica" target="_blank">@prof.sergio.eric.matematica</a> | 2026
+</footer>
+
+<script>
+    // ===================== DADOS =====================
+    // Flashcards
+    const flashcards = [
+        { sigla: "SND", nome: "Sistema de Numeração Decimal", desc: "Base 10, posicional, multiplicativo e aditivo. Utiliza 10 símbolos (0-9).", exemplo: "321 = 3x100 + 2x10 + 1" },
+        { sigla: "Valor Absoluto", nome: "Valor Absoluto", desc: "O valor próprio do algarismo, independente da posição.", exemplo: "Em 264, o valor absoluto do 6 é 6." },
+        { sigla: "Valor Relativo", nome: "Valor Relativo", desc: "Valor que o algarismo assume conforme sua posição (ordem).", exemplo: "Em 264, o valor relativo do 6 é 60 (6 dezenas)." },
+        { sigla: "Propriedade Posicional", nome: "Posicionalidade", desc: "Cada algarismo representa um valor de acordo com a posição que ocupa.", exemplo: "Em 413, o 4 vale 400, o 1 vale 10, o 3 vale 3." },
+        { sigla: "Propriedade Multiplicativa", nome: "Multiplicativa", desc: "O valor relativo é obtido multiplicando o algarismo pela potência de 10 da posição.", exemplo: "413 = 4x10² + 1x10¹ + 3x10⁰" },
+        { sigla: "Propriedade Aditiva", nome: "Aditiva", desc: "O número é a soma dos valores relativos de seus algarismos.", exemplo: "413 = 400 + 10 + 3" },
+        { sigla: "Sentido Cardinal", nome: "Cardinal", desc: "Indica quantidade de elementos de um conjunto.", exemplo: "5 maçãs" },
+        { sigla: "Sentido Ordinal", nome: "Ordinal", desc: "Indica posição em uma sequência.", exemplo: "3º lugar" },
+        { sigla: "Sentido de Medida", nome: "Medida", desc: "Descreve grandezas como altura, peso, tempo.", exemplo: "1,75 m de altura" },
+        { sigla: "Sentido Nominal", nome: "Nominal", desc: "Funciona como rótulo ou código, sem valor matemático.", exemplo: "Número de telefone, CEP" },
+        { sigla: "Sentido de Estimativa", nome: "Estimativa", desc: "Percepção da ordem de grandeza e razoabilidade.", exemplo: "Cerca de 1000 pessoas" },
+        { sigla: "Adição - Juntar", nome: "Juntar", desc: "Reunião de dois ou mais conjuntos disjuntos.", exemplo: "3 + 2 = 5" },
+        { sigla: "Adição - Acrescentar", nome: "Acrescentar", desc: "Acréscimo de elementos a um conjunto existente.", exemplo: "3 + 2 = 5" },
+        { sigla: "Subtração - Retirar", nome: "Retirar", desc: "Remover uma quantidade de um conjunto.", exemplo: "43 - 17 = 26" },
+        { sigla: "Subtração - Completar", nome: "Completar", desc: "Quanto falta para atingir uma quantidade alvo.", exemplo: "Quanto falta de 17 para 43?" },
+        { sigla: "Subtração - Comparar", nome: "Comparar", desc: "Diferença entre duas quantidades.", exemplo: "Diferença entre 43 e 17" },
+        { sigla: "Multiplicação - Parcelas Iguais", nome: "Parcelas Iguais", desc: "Adição sucessiva de uma mesma parcela.", exemplo: "3x4 = 4+4+4" },
+        { sigla: "Multiplicação - Config. Retangular", nome: "Configuração Retangular", desc: "Total de objetos dispostos em linhas e colunas (discreta) ou área (contínua).", exemplo: "6x5 = 30 ovos em uma cartela" },
+        { sigla: "Multiplicação - Combinatória", nome: "Combinatória", desc: "Número de combinações entre elementos de conjuntos distintos.", exemplo: "3 calças x 4 camisas = 12 looks" },
+        { sigla: "Divisão - Partilha Equitativa", nome: "Partilha", desc: "Dividir uma quantidade em partes iguais.", exemplo: "12 doces para 4 pessoas → 3 cada" },
+        { sigla: "Divisão - Medida", nome: "Medida", desc: "Quantas vezes uma quantidade cabe em outra.", exemplo: "12 ÷ 4 = 3 caixas" }
+    ];
+
+    // Quiz
+    const quizQuestions = [
+        { text: "Qual propriedade do SND afirma que cada algarismo representa um valor de acordo com sua posição?", correct: "Posicional", options: ["Posicional", "Multiplicativa", "Aditiva", "Comutativa"], hint: "Relaciona-se à ordem (unidade, dezena, centena).", explanation: "A propriedade posicional é essencial para entender o valor relativo dos algarismos." },
+        { text: "O sentido do número associado a 'número de telefone' é:", correct: "Nominal", options: ["Cardinal", "Ordinal", "Nominal", "Medida"], hint: "Não envolve quantidade ou ordem.", explanation: "Números de telefone são rótulos (identificação), não se operam matematicamente." },
+        { text: "Na subtração, o problema 'Quantas figurinhas faltam para completar o álbum?' mobiliza o sentido de:", correct: "Completar", options: ["Retirar", "Completar", "Comparar", "Partilhar"], hint: "Falta atingir um total.", explanation: "Completar: quanto falta para chegar a um valor desejado." },
+        { text: "A multiplicação 3 x 4 pode ser interpretada como 4 + 4 + 4. Que sentido está sendo usado?", correct: "Adição de parcelas iguais", options: ["Configuração retangular", "Combinatória", "Adição de parcelas iguais", "Proporcionalidade"], hint: "Repetição da mesma parcela.", explanation: "Adição de parcelas iguais é um dos sentidos da multiplicação." },
+        { text: "No algoritmo tradicional da adição, a frase 'vai um' na verdade representa:", correct: "Uma dezena que será acrescentada à ordem das dezenas", options: ["Uma unidade que sobe", "Um erro de cálculo", "Uma dezena que será acrescentada à ordem das dezenas", "Um centena"], hint: "O '1' que sobra de 10 unidades.", explanation: "11 unidades = 1 dezena + 1 unidade; o '1' que 'vai' é a dezena." },
+        { text: "A divisão 12 ÷ 4 = 3, no sentido de 'quantas caixas com 4 bolinhas cabem em 12 bolinhas', representa o sentido de:", correct: "Medida", options: ["Partilha equitativa", "Medida", "Comparação", "Retirada"], hint: "Quantas vezes o 4 cabe no 12.", explanation: "Sentido de medida (iteração de uma unidade de referência)." },
+        { text: "Qual dos seguintes materiais, ao atribuir valores fixos por cor, dispensa a necessidade da propriedade posicional?", correct: "Tampinhas coloridas", options: ["Material dourado", "Ábaco", "Tampinhas coloridas", "Quadro valor posicional"], hint: "Cada cor já representa uma ordem (ex: azul=unidade, vermelho=dezena).", explanation: "Nas tampinhas coloridas, a cor já carrega o valor, não a posição." },
+        { text: "A decomposição 64 + 27 = (60+4)+(20+7) = 80+11 = 91 é um exemplo de:", correct: "Estratégia baseada no valor relativo", options: ["Algoritmo tradicional", "Estratégia baseada no valor relativo", "Método da compensação", "Arredondamento"], hint: "Separa dezenas e unidades.", explanation: "Decomposição respeita o valor posicional e é uma estratégia potente." }
+    ];
+
+    // Associação (conceito -> definição)
+    const associacoes = [
+        { termo: "Propriedade posicional do SND", definicao: "Cada algarismo tem valor diferente conforme a posição que ocupa." },
+        { termo: "Sentido cardinal do número", definicao: "Indica a quantidade de elementos de um conjunto." },
+        { termo: "Sentido ordinal", definicao: "Indica a posição em uma sequência (1º, 2º, 3º...)." },
+        { termo: "Adição: sentido de juntar", definicao: "Reunir dois ou mais conjuntos disjuntos." },
+        { termo: "Subtração: sentido de completar", definicao: "Determinar quanto falta para atingir uma quantidade alvo." },
+        { termo: "Multiplicação: sentido de configuração retangular", definicao: "Total de elementos dispostos em linhas e colunas (discreta) ou área (contínua)." },
+        { termo: "Divisão: sentido de medida", definicao: "Quantas vezes uma unidade de referência cabe no todo." },
+        { termo: "Decomposição de números", definicao: "Estratégia que respeita o valor relativo e evita 'vai um'." }
+    ];
+
+    // Comparativo: afirmações sobre algoritmos e decomposição (verdadeiro/falso ou classificação)
+    const comparativoItems = [
+        { afirmacao: "No algoritmo tradicional da adição, 'vai um' significa que uma dezena será adicionada à próxima ordem.", tipo: "Verdadeiro", explicacao: "Correto: 10 unidades formam 1 dezena." },
+        { afirmacao: "A decomposição de números só pode ser feita da direita para a esquerda.", tipo: "Falso", explicacao: "A decomposição pode ser feita em qualquer ordem, respeitando os valores relativos." },
+        { afirmacao: "O algoritmo tradicional da subtração exige que o minuendo seja maior que o subtraendo.", tipo: "Verdadeiro", explicacao: "Nos naturais, não se subtrai um número maior de um menor." },
+        { afirmacao: "A frase 'empresta um do vizinho' é matematicamente precisa e deve ser incentivada.", tipo: "Falso", explicacao: "Na verdade, decompõe-se uma dezena em 10 unidades." },
+        { afirmacao: "A decomposição na multiplicação permite multiplicar cada parte de um fator por todas as partes do outro.", tipo: "Verdadeiro", explicacao: "Ex: 25x27 = (20+5)x(20+7) = 400+140+100+35." }
+    ];
+
+    // Conteúdos do Mapa Interativo
+    const conteudosMapa = {
+        snd: "🔢 Sistema de Numeração Decimal: base 10, posicional (valor depende da posição), multiplicativo (valor relativo = algarismo x potência de 10) e aditivo (soma dos valores relativos). Ex: 127 = 1x100 + 2x10 + 7.",
+        valor_abs_rel: "📊 Valor absoluto: o próprio algarismo (ex: em 127, o valor absoluto do 2 é 2). Valor relativo: o valor que o algarismo assume pela posição (ex: 2 vale 20).",
+        propriedades_snd: "🏛️ Propriedades do SND: Posicional (cada posição tem valor diferente), Multiplicativa (cada ordem é potência de 10), Aditiva (número = soma dos valores posicionais).",
+        cardinal: "🔢 Cardinal: quantidade de elementos. Ex: 5 laranjas.",
+        ordinal: "🥇 Ordinal: posição em uma sequência. Ex: 3º colocado.",
+        medida: "📏 Medida: associado a grandezas (comprimento, massa, tempo). Ex: 1,70 m.",
+        nominal: "🏷️ Nominal: identificador, sem valor matemático. Ex: número da camisa, CEP.",
+        estimativa: "🔍 Estimativa: ordem de grandeza, valor aproximado. Ex: cerca de 100 pessoas.",
+        adicao_juntar: "➕ Juntar: reunião de dois conjuntos disjuntos. Ex: 3 maçãs + 2 maçãs = 5 maçãs.",
+        adicao_acrescentar: "➕ Acrescentar: adicionar elementos a um conjunto existente. Ex: tinha 3, ganhou 2, fica 5.",
+        subtracao_retirar: "➖ Retirar: remover uma quantidade de um conjunto. Ex: 43 figurinhas, retirou 17 → restam 26.",
+        subtracao_completar: "➖ Completar: quanto falta para atingir um total. Ex: para 43 faltam 26.",
+        subtracao_comparar: "➖ Comparar: diferença entre duas quantidades. Ex: 43 é 26 a mais que 17.",
+        mult_parcelas_iguais: "✖️ Adição de parcelas iguais: 3x4 = 4+4+4 = 12. O primeiro fator indica quantas vezes a parcela se repete.",
+        mult_config_retangular: "📐 Configuração retangular: discreta (ex: ovos em cartela 6x5) ou contínua (área do retângulo: 3m x 4m = 12 m²).",
+        mult_combinatoria: "👕 Combinatória: número de combinações entre conjuntos. Ex: 3 calças × 4 camisas = 12 looks.",
+        div_partilha: "➗ Partilha equitativa: dividir uma quantidade em partes iguais. Ex: 12 doces para 4 pessoas → 3 cada.",
+        div_medida: "➗ Medida: quantas vezes uma unidade cabe no todo. Ex: 12 ÷ 4 = 3 caixas (cada caixa com 4 bolinhas).",
+        algoritmo_tradicional: "📝 Algoritmo tradicional: críticas – usa frases como 'vai um' e 'empresta um', que escondem o valor posicional. Importante substituir por linguagem matemática precisa.",
+        decomposicao: "🔄 Decomposição: estratégia que respeita o valor relativo. Permite operar de forma flexível, sem ordem rígida (direita/esquerda). Ex: 25x27 = (20+5)x(20+7).",
+        tampinhas: "🟦🟥⬛ Tampinhas coloridas: cada cor representa uma ordem (azul=unidade, vermelho=dezena, preta=centena). Potencial: representar números. Limite: dispensa a propriedade posicional (a cor já dá o valor).",
+        material_dourado: "🧱 Material dourado: cubinhos (unidade), barras (dezena), placas (centena). Potente para agrupamentos e trocas, mas também pode gerar confusão se não associado ao valor posicional."
+    };
+
+    // ===================== LÓGICA (SOM, FLASHCARDS, QUIZ, ASSOC, COMP, MAPA) =====================
+    // Som
+    let somAtivado = localStorage.getItem('somAtivado_s3') !== 'false';
+    const audioToggle = document.getElementById('audioToggleBtn');
+    function playSom(tipo) {
+        if (!somAtivado) return;
+        try {
+            let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            gain.gain.value = 0.1;
+            if (tipo === 'acerto') { osc.frequency.value = 880; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5); }
+            else if (tipo === 'erro') { osc.frequency.value = 440; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5); }
+            else if (tipo === 'flash') { osc.frequency.value = 660; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3); }
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } catch(e) {}
+    }
+    audioToggle.textContent = somAtivado ? "🔊 Som ativado" : "🔇 Som desativado";
+    audioToggle.addEventListener('click', () => { somAtivado = !somAtivado; localStorage.setItem('somAtivado_s3', somAtivado); audioToggle.textContent = somAtivado ? "🔊 Som ativado" : "🔇 Som desativado"; });
+
+    // Flashcards
+    let flashIndex = 0, isFlipped = false;
+    const flashContainer = document.getElementById('flashcard3d');
+    const frontSigla = document.getElementById('frontSigla');
+    const backSigla = document.getElementById('backSigla');
+    const backDesc = document.getElementById('backDesc');
+    const backExample = document.getElementById('backExample');
+    const flashCounter = document.getElementById('flashCounter');
+    function updateFlash() {
+        const item = flashcards[flashIndex % flashcards.length];
+        frontSigla.innerText = item.sigla;
+        backSigla.innerText = `${item.sigla} – ${item.nome}`;
+        backDesc.innerText = item.desc;
+        backExample.innerText = `📘 Exemplo: ${item.exemplo}`;
+        flashCounter.innerText = `${flashIndex+1}/${flashcards.length}`;
+        if (isFlipped) { flashContainer.classList.remove('flipped'); isFlipped=false; }
+    }
+    function flipCard() { flashContainer.classList.toggle('flipped'); isFlipped=!isFlipped; playSom('flash'); }
+    function prevFlash() { flashIndex=(flashIndex-1+flashcards.length)%flashcards.length; updateFlash(); }
+    function nextFlash() { flashIndex=(flashIndex+1)%flashcards.length; updateFlash(); }
+    function resetFlash() { flashIndex=0; updateFlash(); if(isFlipped) flipCard(); }
+    document.getElementById('prevFlash').onclick = prevFlash;
+    document.getElementById('nextFlash').onclick = nextFlash;
+    document.getElementById('resetFlashMode').onclick = resetFlash;
+    flashContainer.onclick = flipCard;
+    updateFlash();
+    document.addEventListener('keydown', (e) => {
+        if (document.getElementById('tabFlash').classList.contains('active-tab')) {
+            if (e.key === 'ArrowLeft') { prevFlash(); e.preventDefault(); }
+            else if (e.key === 'ArrowRight') { nextFlash(); e.preventDefault(); }
+        }
+    });
+
+    // Quiz com revisão de erros
+    let quizCurrent = 0, quizHits = 0, quizAnswered = false;
+    let questoesErradas = [];
+    let modoRevisao = false;
+    let questoesRevisao = [];
+    let revisaoIndex = 0;
+    const quizTotal = quizQuestions.length;
+    const scenarioDiv = document.getElementById('scenarioCard');
+    const optionsDiv = document.getElementById('optionsContainer');
+    const hintBtn = document.getElementById('hintBtn');
+    const hintBox = document.getElementById('hintBox');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    const explanationBox = document.getElementById('explanationBox');
+    const nextBtn = document.getElementById('nextBtn');
+    const hitsSpan = document.getElementById('hitsCount');
+    const remainingSpan = document.getElementById('remainingCount');
+    const resetQuizBtn = document.getElementById('resetQuizMode');
+    const revisarErrosBtn = document.getElementById('revisarErrosBtn');
+    const quizConcluidoMsg = document.getElementById('quizConcluidoMsg');
+    function mostrarConfete() { for (let i=0;i<30;i++) { let c=document.createElement('div'); c.className='confete'; c.style.left=Math.random()*100+'%'; c.style.backgroundColor=`hsl(${Math.random()*360},80%,60%)`; document.body.appendChild(c); setTimeout(()=>c.remove(),1000); } }
+    function carregarQuiz() {
+        quizAnswered = false;
+        const q = modoRevisao ? questoesRevisao[revisaoIndex] : quizQuestions[quizCurrent];
+        scenarioDiv.innerHTML = modoRevisao ? `[REVISÃO] ${q.text}` : q.text;
+        feedbackMsg.innerHTML = "";
+        explanationBox.style.display = "none";
+        hintBox.style.display = "none";
+        nextBtn.style.display = "none";
+        hintBtn.disabled = false;
+        optionsDiv.innerHTML = "";
+        q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkQuizAnswer(opt, q);
+            optionsDiv.appendChild(btn);
+        });
+        remainingSpan.innerText = modoRevisao ? questoesRevisao.length - revisaoIndex : quizTotal - quizCurrent;
+        hitsSpan.innerText = quizHits;
+        document.querySelectorAll('.option-btn').forEach(b=>b.disabled=false);
+    }
+    function checkQuizAnswer(selected, q) {
+        if (quizAnswered) return;
+        quizAnswered = true;
+        const isCorrect = (selected === q.correct);
+        if (isCorrect) {
+            feedbackMsg.innerHTML = `✅ Correto! "${selected}" é a resposta certa.`;
+            feedbackMsg.style.color = "#1f7a5a";
+            if (!modoRevisao) quizHits++;
+            playSom('acerto');
+        } else {
+            feedbackMsg.innerHTML = `❌ Incorreto. A resposta certa é "${q.correct}".`;
+            feedbackMsg.style.color = "#c0392b";
+            if (!modoRevisao) questoesErradas.push(q);
+            else questoesRevisao.push(q);
+            playSom('erro');
+        }
+        hitsSpan.innerText = quizHits;
+        explanationBox.innerHTML = `<strong>📖 Explicação:</strong><br>${q.explanation}<br><br><strong>🔍 Dica:</strong> ${q.hint}`;
+        explanationBox.style.display = "block";
+        nextBtn.style.display = "block";
+        hintBtn.disabled = true;
+        document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
+    }
+    function avancarQuiz() {
+        if (!quizAnswered) return;
+        if (modoRevisao) {
+            revisaoIndex++;
+            if (revisaoIndex < questoesRevisao.length) carregarQuiz();
+            else {
+                scenarioDiv.innerHTML = `🏆 Revisão concluída! Acertos totais: ${quizHits}/${quizTotal}.`;
+                optionsDiv.innerHTML = "";
+                nextBtn.style.display = "none";
+                revisarErrosBtn.style.display = "none";
+                feedbackMsg.innerHTML = "";
+                explanationBox.style.display = "none";
+                remainingSpan.innerText = "0";
+                modoRevisao = false;
+                quizConcluidoMsg.style.display = 'block';
+                mostrarConfete();
+            }
+        } else {
+            quizCurrent++;
+            if (quizCurrent < quizTotal) carregarQuiz();
+            else {
+                scenarioDiv.innerHTML = `🏆 Concluído! Acertos: ${quizHits}/${quizTotal}.`;
+                optionsDiv.innerHTML = "";
+                nextBtn.style.display = "none";
+                feedbackMsg.innerHTML = "";
+                explanationBox.style.display = "none";
+                remainingSpan.innerText = "0";
+                if (questoesErradas.length > 0) {
+                    revisarErrosBtn.style.display = "inline-block";
+                    quizConcluidoMsg.style.display = 'block';
+                } else {
+                    revisarErrosBtn.style.display = "none";
+                    quizConcluidoMsg.style.display = 'block';
+                    mostrarConfete();
+                }
+            }
+        }
+    }
+    function iniciarRevisao() {
+        if (questoesErradas.length === 0) return;
+        modoRevisao = true;
+        questoesRevisao = [...questoesErradas];
+        revisaoIndex = 0;
+        revisarErrosBtn.style.display = "none";
+        quizConcluidoMsg.style.display = 'none';
+        carregarQuiz();
+    }
+    function resetQuiz() { quizCurrent=0; quizHits=0; questoesErradas=[]; modoRevisao=false; revisarErrosBtn.style.display="none"; quizConcluidoMsg.style.display="none"; carregarQuiz(); }
+    nextBtn.onclick = avancarQuiz;
+    resetQuizBtn.onclick = resetQuiz;
+    revisarErrosBtn.onclick = iniciarRevisao;
+    hintBtn.onclick = () => { if(!quizAnswered) hintBox.innerHTML = `💡 ${(modoRevisao ? questoesRevisao[revisaoIndex] : quizQuestions[quizCurrent]).hint}`; hintBox.style.display="block"; };
+    carregarQuiz();
+
+    // Associação
+    function shuffleArray(arr) { for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+    let assocIndex=0, assocHits=0, assocAnsweredFlag=false;
+    const assocSiglaSpan = document.getElementById('assocSigla');
+    const assocOptionsDiv = document.getElementById('assocOptions');
+    const assocFeedback = document.getElementById('assocFeedback');
+    const nextAssocBtn = document.getElementById('nextAssoc');
+    const assocHitsSpan = document.getElementById('assocHits');
+    const assocTotalSpan = document.getElementById('assocTotal');
+    const resetAssocBtn = document.getElementById('resetAssocMode');
+    assocTotalSpan.innerText = associacoes.length;
+    function loadAssociation() {
+        assocAnsweredFlag = false;
+        const current = associacoes[assocIndex];
+        assocSiglaSpan.innerText = current.termo;
+        let otherDefs = associacoes.filter(item => item.termo !== current.termo).map(item => item.definicao);
+        otherDefs = shuffleArray([...otherDefs]).slice(0,3);
+        let options = shuffleArray([current.definicao, ...otherDefs]);
+        assocOptionsDiv.innerHTML = "";
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAssociation(opt, current.definicao);
+            assocOptionsDiv.appendChild(btn);
+        });
+        assocFeedback.innerHTML = "";
+    }
+    function checkAssociation(selected, correct) {
+        if (assocAnsweredFlag) return;
+        assocAnsweredFlag = true;
+        if (selected === correct) { assocFeedback.innerHTML = "✅ Correta!"; assocFeedback.style.color="#1f7a5a"; assocHits++; playSom('acerto'); }
+        else { assocFeedback.innerHTML = `❌ Errado. Correta: "${correct}"`; assocFeedback.style.color="#c0392b"; playSom('erro'); }
+        assocHitsSpan.innerText = assocHits;
+        document.querySelectorAll('#assocOptions .option-btn').forEach(b=>b.disabled=true);
+    }
+    function nextAssociation() { if (!assocAnsweredFlag && !confirm("Pular?")) return; assocIndex=(assocIndex+1)%associacoes.length; if(assocIndex===0){ assocHits=0; assocHitsSpan.innerText="0"; } loadAssociation(); }
+    function resetAssoc() { assocIndex=0; assocHits=0; loadAssociation(); }
+    nextAssocBtn.onclick = nextAssociation;
+    resetAssocBtn.onclick = resetAssoc;
+    loadAssociation();
+
+    // Comparativo
+    let compIndex=0, compHits=0, compAnsweredFlag=false;
+    const compConceptSpan = document.getElementById('compConcept');
+    const compOptionsDiv = document.getElementById('compOptions');
+    const compFeedback = document.getElementById('compFeedback');
+    const nextCompBtn = document.getElementById('nextComp');
+    const compHitsSpan = document.getElementById('compHits');
+    const compTotalSpan = document.getElementById('compTotal');
+    const resetCompBtn = document.getElementById('resetCompMode');
+    compTotalSpan.innerText = comparativoItems.length;
+    function loadComparativo() {
+        compAnsweredFlag = false;
+        const current = comparativoItems[compIndex];
+        compConceptSpan.innerText = `"${current.afirmacao}"`;
+        compOptionsDiv.innerHTML = "";
+        const options = ["Verdadeiro", "Falso"];
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkComparativo(opt, current.tipo, current.explicacao);
+            compOptionsDiv.appendChild(btn);
+        });
+        compFeedback.innerHTML = "";
+    }
+    function checkComparativo(selected, correct, explicacao) {
+        if (compAnsweredFlag) return;
+        compAnsweredFlag = true;
+        if (selected === correct) { compFeedback.innerHTML = `✅ Correta! ${explicacao}`; compFeedback.style.color="#1f7a5a"; compHits++; playSom('acerto'); }
+        else { compFeedback.innerHTML = `❌ Incorreto. ${explicacao}`; compFeedback.style.color="#c0392b"; playSom('erro'); }
+        compHitsSpan.innerText = compHits;
+        document.querySelectorAll('#compOptions .option-btn').forEach(b=>b.disabled=true);
+    }
+    function nextComparativo() { if (!compAnsweredFlag && !confirm("Pular?")) return; compIndex=(compIndex+1)%comparativoItems.length; if(compIndex===0){ compHits=0; compHitsSpan.innerText="0"; } loadComparativo(); }
+    function resetComparativo() { compIndex=0; compHits=0; loadComparativo(); }
+    nextCompBtn.onclick = nextComparativo;
+    resetCompBtn.onclick = resetComparativo;
+    loadComparativo();
+
+    // Mapa Interativo com anotações
+    const listaSeq = document.getElementById('sequenciaLista');
+    function mostrarConteudo(texto, key) {
+        let notaSalva = localStorage.getItem(`nota_s3_${key}`) || '';
+        listaSeq.innerHTML = `<div class="sequencia-item">
+            ${texto}
+            <button class="btn-nota" data-key="${key}" aria-label="Adicionar anotação">📝</button>
+            <div class="nota-texto" id="nota-${key}" style="${notaSalva ? '' : 'display:none;'}">${notaSalva ? '✏️ ' + notaSalva : ''}</div>
+        </div>`;
+        const btnNota = listaSeq.querySelector('.btn-nota');
+        if (btnNota) {
+            btnNota.addEventListener('click', (e) => {
+                let novaNota = prompt('Digite sua anotação pessoal:', notaSalva);
+                if (novaNota !== null) {
+                    localStorage.setItem(`nota_s3_${key}`, novaNota);
+                    document.getElementById(`nota-${key}`).innerHTML = '✏️ ' + novaNota;
+                    document.getElementById(`nota-${key}`).style.display = 'block';
+                }
+            });
+        }
+    }
+    document.querySelectorAll('#tabInterativo .info-btn').forEach(btn => {
+        const key = btn.getAttribute('data-info');
+        if (key && conteudosMapa[key]) {
+            btn.addEventListener('click', () => { mostrarConteudo(conteudosMapa[key], key); });
+        }
+    });
+
+    // TABS
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            contents.forEach(c => c.classList.remove('active-tab'));
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active-tab');
+        });
+    });
+</script>
+</body>
+</html>
