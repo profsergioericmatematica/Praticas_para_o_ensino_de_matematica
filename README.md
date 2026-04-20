@@ -15,13 +15,13 @@ O conteúdo da aplicação está organizado ao longo de 7 semanas de estudo, cob
 * **Semana 6:** Estudos e práticas pedagógicas de grandezas e medidas
 * **Semana 7:** Problematizações em contextos de probabilidade e estatística que refletem nas práticas pedagógicas
 
-> **Nota:** As semanas 3 a 7 estão em desenvolvimento (páginas em construção no menu principal).
+> **Nota:** As semanas 5, 6 e 7 estão em desenvolvimento (páginas em construção no menu principal).
 
 ## ✨ Funcionalidades
-O aplicativo é dividido por semanas de estudo, onde cada semana (1 e 2) oferece um conjunto completo de ferramentas de aprendizagem:
+O aplicativo é dividido por semanas de estudo, onde cada semana (1, 2, 3 e 4) oferece um conjunto completo de ferramentas de aprendizagem:
 
 ### 📇 Flashcards 3D
-Cartões interativos de frente e verso para memorização ativa de siglas, conceitos, tendências pedagógicas e gerações da profissão docente. Basta clicar no cartão para virar e conferir a resposta.
+Cartões interativos de frente e verso para memorização ativa de siglas, conceitos, tendências pedagógicas, gerações da profissão docente, propriedades do SND, sentidos das operações e conceitos algébricos. Basta clicar no cartão para virar e conferir a resposta.
 
 ### 🎯 Quiz Interativo
 Questões de múltipla escolha focadas na aplicação prática da teoria, com sistema de dicas, feedback imediato e explicações detalhadas. A pontuação e o número de questões restantes são exibidos em tempo real.
@@ -34,20 +34,22 @@ Exercícios de classificação específicos para cada semana:
 - **Semana 1:** Discursos Economicista vs. Crítico sobre avaliações em larga escala.
 - **Semana 2:** Conceitos de Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, entre outros.
 - **Semana 3:** Afirmações sobre algoritmos tradicionais vs. estratégias de decomposição (classificar como Verdadeiro ou Falso, com justificativa).
+- **Semana 4:** Tendências do ensino de álgebra (Linguístico-pragmática, Fundamentalista-estrutural, Fundamentalista-analógica) – classifique as afirmações.
 
-### 🧠 Mapa Interativo (NOVO!)
+### 🧠 Mapa Interativo
 Um sistema de **botões clicáveis** que exibe, sob demanda, conteúdos detalhados sobre cada tópico da semana.  
 - **Semana 1:** botões para Tataravô, Bisavô, Avô, Pai, todas as tendências pedagógicas (Formalista Clássica, Empírico-Ativista, etc.), SAEB, TIMSS 2023, discursos sobre avaliação, Escuta Nacional de Professores (2025) e Políticas Públicas (PNE).  
 - **Semana 2:** botões para Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, Professor vs. Pesquisador, Modelos Shulman, MKT, MTSK, TPACK, Saberes da Ação Pedagógica e Não Saberes.  
 - **Semana 3:** botões para Sistema de Numeração Decimal (propriedades posicional, multiplicativa, aditiva), sentidos do número (cardinal, ordinal, medida, nominal, estimativa), sentidos da adição (juntar, acrescentar), subtração (retirar, completar, comparar), multiplicação (parcelas iguais, configuração retangular, combinatória), divisão (partilha equitativa, medida), algoritmo tradicional vs. decomposição, tampinhas coloridas, material dourado e ábaco.
+- **Semana 4:** botões para evolução histórica da álgebra (fases retórica, sincopada, simbólica), pensamento algébrico vs. álgebra como artefato, três tendências do ensino de álgebra, pilares do pensamento algébrico (generalizar, formalizar, argumentar), BNCC (anos iniciais, anos finais, ensino médio), tarefas práticas (Jogo do Tum-pá, colar de contas, dividindo a cidade, cabo de guerra), desafios (transformismo algébrico, sinal de igual relacional, ensino exploratório).
 
 **Diferencial:** Cada clique **substitui** o conteúdo exibido anteriormente (não acumula), mantendo a área de visualização sempre limpa e focada no último tópico selecionado. Não há botão de "limpar" – a própria substituição já organiza o estudo por tópico.
 
 ### 📖 Síntese Teórica
-Um painel lateral de consulta rápida com os resumos essenciais dos textos base e videoaulas, disponível em ambas as semanas.
+Um painel lateral de consulta rápida com os resumos essenciais dos textos base e videoaulas, disponível em todas as semanas.
 
 ### 📄 Download de Resumos (PDF)
-Acesso rápido aos resumos gerados em LaTeX padronizados para impressão (arquivos `SEP401_apostila_semana1.pdf` e `SEP401_apostila_semana2.pdf`).
+Acesso rápido aos resumos gerados em LaTeX padronizados para impressão (arquivos `SEP401_apostila_semana1.pdf`, `SEP401_apostila_semana2.pdf`, `SEP401_apostila_semana3.pdf` e `SEP401_apostila_semana4.pdf`).
 
 ## 🛠️ Tecnologias Utilizadas
 Este projeto foi construído puramente com tecnologias web padrão (Vanilla), garantindo leveza e fácil hospedagem:
@@ -62,7 +64,7 @@ Este projeto foi construído puramente com tecnologias web padrão (Vanilla), ga
 4. *(Recomendado)* Para que a função de abrir/baixar os PDFs locais funcione sem bloqueios de segurança dos navegadores, utilize uma extensão de servidor local, como o **Live Server** no VS Code.
 5. Navegue entre as semanas clicando nos botões do menu principal e, dentro de cada semana, explore as abas (Flashcards, Quiz, Associação, Comparativo, Mapa Interativo).
 
-## 📁 Estrutura de arquivos 
+## 📁 Estrutura de arquivos
 
 projeto/
 
@@ -74,11 +76,15 @@ projeto/
 
 |-- semana3.html
 
+|-- semana4.html
+
 |-- SEP401_apostila_semana1.pdf
 
 |-- SEP401_apostila_semana2.pdf
 
 |-- SEP401_apostila_semana3.pdf
+
+|-- SEP401_apostila_semana4.pdf
 
 |-- README.md
 
