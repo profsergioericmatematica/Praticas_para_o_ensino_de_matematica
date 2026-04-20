@@ -88,6 +88,8 @@ projeto/
 
 |-- README.md
 
+|-- LICENSE
+
 
 ## 👨‍🏫 Autor
 Desenvolvido com 💡 por **Prof. Sergio Eric Reis de Oliveira** | Acompanhe no Instagram: [@prof.sergio.eric.matematica](https://instagram.com/prof.sergio.eric.matematica)
