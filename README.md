@@ -15,7 +15,7 @@ O conteúdo da aplicação está organizado ao longo de 7 semanas de estudo, cob
 * **Semana 6:** Estudos e práticas pedagógicas de grandezas e medidas
 * **Semana 7:** Problematizações em contextos de probabilidade e estatística que refletem nas práticas pedagógicas
 
-> **Nota:** As semanas 5, 6 e 7 estão em desenvolvimento (páginas em construção no menu principal).
+> **Nota:** As semanas 6 e 7 estão em desenvolvimento (páginas em construção no menu principal).
 
 ## ✨ Funcionalidades
 O aplicativo é dividido por semanas de estudo, onde cada semana (1, 2, 3 e 4) oferece um conjunto completo de ferramentas de aprendizagem:
@@ -35,6 +35,7 @@ Exercícios de classificação específicos para cada semana:
 - **Semana 2:** Conceitos de Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, entre outros.
 - **Semana 3:** Afirmações sobre algoritmos tradicionais vs. estratégias de decomposição (classificar como Verdadeiro ou Falso, com justificativa).
 - **Semana 4:** Tendências do ensino de álgebra (Linguístico-pragmática, Fundamentalista-estrutural, Fundamentalista-analógica) – classifique as afirmações.
+- **Semana 5:** Afirmações sobre fundamentos da geometria (poliedros convexos, relação de Euler, direção vs. sentido, planificação, etc.) – classifique como Verdadeiro ou Falso.
 
 ### 🧠 Mapa Interativo
 Um sistema de **botões clicáveis** que exibe, sob demanda, conteúdos detalhados sobre cada tópico da semana.  
@@ -42,6 +43,7 @@ Um sistema de **botões clicáveis** que exibe, sob demanda, conteúdos detalhad
 - **Semana 2:** botões para Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, Professor vs. Pesquisador, Modelos Shulman, MKT, MTSK, TPACK, Saberes da Ação Pedagógica e Não Saberes.  
 - **Semana 3:** botões para Sistema de Numeração Decimal (propriedades posicional, multiplicativa, aditiva), sentidos do número (cardinal, ordinal, medida, nominal, estimativa), sentidos da adição (juntar, acrescentar), subtração (retirar, completar, comparar), multiplicação (parcelas iguais, configuração retangular, combinatória), divisão (partilha equitativa, medida), algoritmo tradicional vs. decomposição, tampinhas coloridas, material dourado e ábaco.
 - **Semana 4:** botões para evolução histórica da álgebra (fases retórica, sincopada, simbólica), pensamento algébrico vs. álgebra como artefato, três tendências do ensino de álgebra, pilares do pensamento algébrico (generalizar, formalizar, argumentar), BNCC (anos iniciais, anos finais, ensino médio), tarefas práticas (Jogo do Tum-pá, colar de contas, dividindo a cidade, cabo de guerra), desafios (transformismo algébrico, sinal de igual relacional, ensino exploratório).
+- **Semana 5:** botões para fundamentos da geometria (origem, abandono curricular, desenvolvimento do pensamento geométrico), localização e movimentação (direção vs. sentido, referencial, mapas), geometria espacial (poliedros convexos/não convexos, corpos redondos, relação de Euler, planificação, prismas e pirâmides), recursos didáticos (materiais manipuláveis, tecnologias digitais, desconstrução dimensional), BNCC (anos iniciais, anos finais, ensino médio), pesquisa de Pavanello & Franco (diálogo artificial, efeito Topázio, imprecisões conceituais, negociação de significados).
 
 **Diferencial:** Cada clique **substitui** o conteúdo exibido anteriormente (não acumula), mantendo a área de visualização sempre limpa e focada no último tópico selecionado. Não há botão de "limpar" – a própria substituição já organiza o estudo por tópico.
 
@@ -78,6 +80,8 @@ projeto/
 
 |-- semana4.html
 
+|-- semana5.html
+
 |-- SEP401_apostila_semana1.pdf
 
 |-- SEP401_apostila_semana2.pdf
@@ -85,6 +89,8 @@ projeto/
 |-- SEP401_apostila_semana3.pdf
 
 |-- SEP401_apostila_semana4.pdf
+
+|-- SEP401_apostila_semana5.pdf
 
 |-- README.md
 
