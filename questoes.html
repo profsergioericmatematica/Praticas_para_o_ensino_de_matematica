@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Questões de Revisão - Práticas para o Ensino de Matemática I</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #eef2f8;
+            padding: 24px 16px;
+            color: #1a2c3e;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1f4e6e;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            transition: 0.2s;
+        }
+        .btn-voltar:hover {
+            background: #2c7da0;
+            transform: translateY(-2px);
+        }
+        h1 {
+            color: #1f4e6e;
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+        .subtitulo {
+            color: #2c7da0;
+            margin-bottom: 32px;
+            border-left: 4px solid #2c7da0;
+            padding-left: 16px;
+        }
+        .question-card {
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .question-header {
+            background: #1f4e6e;
+            color: white;
+            padding: 12px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .semana-badge {
+            background: #2c7da0;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+        .question-body {
+            padding: 24px;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .alternativas {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .alternativa {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: #f8fafc;
+            border-radius: 60px;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .alternativa:hover {
+            background: #e2edf2;
+            border-color: #2c7da0;
+        }
+        .alternativa.selected {
+            background: #e0f2fe;
+            border-color: #1f4e6e;
+            border-width: 2px;
+        }
+        .alternativa input {
+            margin: 0;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .alternativa label {
+            flex: 1;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-responder {
+            background: #1f7a5a;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        .btn-responder:hover {
+            background: #145940;
+        }
+        .feedback {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 1rem;
+            display: none;
+        }
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        .explicacao {
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        .navegacao {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .nav-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-btn:hover {
+            background: #cbd5e1;
+        }
+        .contador {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+        hr {
+            margin: 20px 0;
+            border-color: #cbd5e1;
+        }
+        @media (max-width: 600px) {
+            .question-body { padding: 16px; }
+            .alternativa { padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="index.html" class="btn-voltar">⬅️ Voltar ao Menu</a>
+    <h1>📝 Questões de Revisão</h1>
+    <div class="subtitulo">Teste seus conhecimentos sobre as 7 semanas da disciplina</div>
+
+    <div id="questoes-container"></div>
+
+    <div class="navegacao">
+        <button id="btn-anterior" class="nav-btn">◀ Anterior</button>
+        <span id="contador" class="contador">Questão 1 de X</span>
+        <button id="btn-proximo" class="nav-btn">Próxima ▶</button>
+    </div>
+
+    <div class="footer">
+        Desenvolvido por Prof. Sergio Eric | Instagram: <a href="https://instagram.com/prof.sergio.eric.matematica" target="_blank">@prof.sergio.eric.matematica</a> | 2026
+    </div>
+</div>
+
+<script>
+    // ===================== BANCO DE QUESTÕES =====================
+    // Cada questão: id, semana, texto, alternativas (array), correta (letra), explicacao
+    const questoes = [
+        // SEMANA 1
+        {
+            id: 1,
+            semana: 1,
+            texto: "O Estudo Internacional de Tendências em Matemática e Ciências (TIMSS) é uma avaliação internacional que busca fornecer dados sobre o desempenho em Matemática e Ciências de estudantes do 4º e 8º anos do Ensino Fundamental. Em 2023, o Brasil teve sua primeira participação no TIMSS. Os níveis de proficiência em Matemática são definidos pelos pontos de corte: Baixo (400), Intermediário (475), Alto (550) e Avançado (625). Os resultados detalhados em Matemática para o Brasil para estudantes do 8º ano revelam uma preocupação com a aprendizagem matemática. Em vista desses resultados, avalie as seguintes afirmações:<br><br>I. A maioria dos estudantes alcançou o nível baixo de proficiência.<br>II. A maioria dos estudantes alcançou o nível abaixo de baixo de proficiência em Matemática.<br>III. Apenas 1% dos brasileiros alcançaram o nível máximo de proficiência em matemática.<br>IV. O Brasil é o segundo país com maior percentual de estudantes em nível intermediário de proficiência em matemática.<br><br>Está correto o que se afirma em:",
+            alternativas: ["A. Apenas III", "B. II e III", "C. II e IV", "D. IV e V", "E. I e II"],
+            correta: "B",
+            explicacao: "Os dados do TIMSS 2023 mostraram que 62% dos estudantes brasileiros do 8º ano não alcançaram sequer o nível baixo (ou seja, estão abaixo do nível baixo). Apenas 1% atingiram o nível máximo (Avançado). Portanto, a afirmativa II (a maioria está abaixo do nível baixo) e a afirmativa III (apenas 1% no nível máximo) estão corretas."
+        },
+        {
+            id: 2,
+            semana: 1,
+            texto: "Os antepassados profissionais referem-se a uma genealogia profissional que representa heranças didáticas, práticas e saberes que moldam o ofício do atual professor de matemática. Para facilitar essa compreensão, o autor utiliza uma metáfora familiar, relacionando figuras históricas (como o professor militar do século XVIII ou o professor dos cursinhos preparatórios do século XIX) a graus de parentesco específicos de uma árvore genealógica. De acordo com o texto 'Quem somos nós, professores de matemática?' (Valente, 2008), a sequência de antepassados profissionais que deram origem ao professor de matemática contemporâneo considera as seguintes características: o professor militar, o professor de matemática de cursos preparatórios de candidatos para o ensino superior, o nascimento da disciplina Matemática e o movimento da matemática moderna. Essas características representam, respectivamente, a classificação hierárquica proposta no texto, que são estas:",
+            alternativas: ["A. Bisavô, Avô, Pai, Filho", "B. Bisavô, Avô, Neto, Pai", "C. Tataravô, Bisavô, Avô, Pai", "D. Bisavô, Avô, Neto, Tataraneto", "E. Tataravô, Bisavô, Avô, Neto"],
+            correta: "C",
+            explicacao: "Segundo Valente (2008), a genealogia do professor de matemática é: Tataravô (professor militar do séc. XVIII) → Bisavô (professor de cursos preparatórios do séc. XIX) → Avô (nascimento da disciplina Matemática nos anos 1930) → Pai (Movimento da Matemática Moderna nos anos 1960). Portanto, a sequência correta é Tataravô, Bisavô, Avô, Pai."
+        },
+        
+        // SEMANA 2
+        {
+            id: 3,
+            semana: 2,
+            texto: "O modelo MTSK organiza o conhecimento do professor de matemática em domínios e subdomínios. Associe as colunas corretamente.<br><br>Coluna I – Subdomínios MTSK<br>I - KoT (Conhecimento dos Tópicos)<br>II - KSM (Conhecimento da Estrutura da Matemática)<br>III - KPM (Conhecimento das Práticas Matemáticas)<br>IV - KFLM (Conhecimento das Características da Aprendizagem)<br>V - KMT (Conhecimento do Ensino de Matemática)<br><br>Coluna II – Evidências<br>A - Professor busca entender dificuldades e obstáculos dos alunos.<br>B - Professor domina uso de software poly para mostrar formas planificadas.<br>C - Professor estabelece conexões entre tópicos atuais e conteúdos anteriores.<br>D - Professor orienta alunos a realizarem deduções e a pensar como se gera conhecimento matemático.<br>E - Professor domina definições, propriedades e registros de representação de um conteúdo.<br><br>Marque a alternativa com todas as associações corretas:",
+            alternativas: ["A. I-A, II-D, III-E, IV-C, V-B", "B. I-E, II-B, III-C, IV-D, V-A", "C. I-C, II-E, III-A, IV-B, V-D", "D. I-E, II-C, III-D, IV-A, V-B", "E. I-D, II-A, III-B, IV-E, V-C"],
+            correta: "D",
+            explicacao: "I-E (KoT: definições e representações), II-C (KSM: conexões entre tópicos), III-D (KPM: deduções e geração de conhecimento), IV-A (KFLM: dificuldades dos alunos), V-B (KMT: uso de software)."
+        },
+        {
+            id: 4,
+            semana: 2,
+            texto: "O modelo Mathematics Teacher’s Specialized Knowledge (MTSK) é atualmente considerado o modelo que responde com maior profundidade à pergunta sobre o conhecimento especializado do professor de Matemática. Estruturalmente, assinale a alternativa que apresenta como esse modelo é organizado em termos de domínios e elementos centrais.",
+            alternativas: [
+                "A. É constituído pelos domínios Conhecimento dos Tópicos (KoT) e Conhecimento dos Parâmetros (KMLS), tendo os valores no centro.",
+                "B. É constituído pelos domínios Conhecimento Matemático (MK) e Conhecimento Didático do Conteúdo (PCK), tendo as crenças no centro.",
+                "C. É constituído pelos domínios Conhecimento do Conteúdo (SMK) e Conhecimento Curricular (CK), tendo as ações no centro.",
+                "D. É constituído pelos domínios Conhecimento do Ensino (KMT) e Conhecimento da Aprendizagem (KFLM), tendo os sentimentos no centro.",
+                "E. É constituído pelos domínios Conhecimento Comum (CCK) e Conhecimento Especializado (SCK), tendo a prática no centro."
+            ],
+            correta: "B",
+            explicacao: "O MTSK é organizado nos domínios MK (Mathematical Knowledge) e PCK (Pedagogical Content Knowledge), com as crenças no centro, permeando todos os subdomínios."
+        },
+        // SEMANA 3
+        {
+            id: 5,
+            semana: 3,
+            texto: "Um professor apresenta três situações-problema para explorar os sentidos das operações fundamentais:<br><br>1. 'Ana tem 12 doces e quer reparti-los igualmente entre seus 4 amigos.'<br>2. 'João tem 3 calças e 4 camisas. De quantas formas ele pode se vestir?'<br>3. 'Sandra tem 43 figurinhas e quer completar um álbum de 50. Quantas faltam?'<br><br>Avalie as afirmações:<br>I - Situação 1: sentido de divisão como partilha equitativa.<br>II - Situação 2: sentido de multiplicação como combinatória.<br>III - Situação 3: sentido de subtração como comparar.<br><br>É correto o que se afirma em:",
+            alternativas: ["a. I, apenas.", "b. II e III, apenas.", "c. II, apenas.", "d. I e II, apenas.", "e. I, II e III."],
+            correta: "d",
+            explicacao: "I e II estão corretas. A situação 3 é subtração com sentido de completar (quanto falta), não comparar."
+        },
+        {
+            id: 6,
+            semana: 3,
+            texto: "Em uma oficina, discute-se o uso de tampinhas coloridas (azul=1, vermelho=10, preto=100) para ensinar o Sistema de Numeração Decimal (SND). Sobre as asserções:<br><br>I. O uso de tampinhas coloridas com valores pré-atribuídos às cores é um recurso limitado para ensinar a propriedade posicional do SND.<br>II. Ao atribuir um valor fixo a uma cor, o valor relativo da peça torna-se intrínseco ao objeto, dispensando a posição para definir seu valor.<br><br>A respeito dessas asserções, assinale a opção correta:",
+            alternativas: [
+                "a. As asserções I e II são verdadeiras, mas a II não é uma justificativa correta da I.",
+                "b. A asserção I é verdadeira, e a II é falsa.",
+                "c. As asserções I e II são verdadeiras, e a II é uma justificativa correta da I.",
+                "d. A asserção I é falsa, e a II é verdadeira.",
+                "e. As asserções I e II são falsas."
+            ],
+            correta: "c",
+            explicacao: "Ambas são verdadeiras, e a II explica por que o recurso é limitado para ensinar a posicionalidade: o valor da cor substitui a posição."
+        },
+        // SEMANA 4
+        {
+            id: 7,
+            semana: 4,
+            texto: "De acordo com os registros históricos, marque a alternativa que contém os três períodos fundamentais que marcam a evolução da linguagem algébrica.",
+            alternativas: [
+                "A. Pragmático, Postulacional e Analógico.",
+                "B. Retórico, Sincopado e Simbólico.",
+                "C. Verbal, Numérico e Estrutural.",
+                "D. Aritmético, Geométrico e Algébrico.",
+                "E. Intra-operacional, Interoperacional e Transoperacional."
+            ],
+            correta: "B",
+            explicacao: "As três fases históricas são: Retórica (verbal), Sincopada (abreviações) e Simbólica (Viète, Descartes)."
+        },
+        {
+            id: 8,
+            semana: 4,
+            texto: "No 'Desafio das Mesas', o aluno observa a variação entre número de mesas e lugares. Preencha as lacunas:<br><br>'Ao utilizar uma tabela, o aluno é incentivado a observar a [I], percebendo como a variação em um conjunto impacta o outro. Ele utiliza o pensamento [II] para identificar a regra de crescimento (+2 a cada mesa), vindo finalmente a [III] para uma quantidade qualquer.'<br><br>Os termos I, II e III são corretamente substituídos por:",
+            alternativas: [
+                "A. I - Adição; II - Repetitivo; III - Somar",
+                "B. I - Estagnação; II - Mecânico; III - Calcular",
+                "C. I - Divisão; II - Linear; III - Fragmentar",
+                "D. I - Covariação; II - Recursivo; III - Generalizar",
+                "E. I - Subtração; II - Retório; III - Memorizar"
+            ],
+            correta: "D",
+            explicacao: "Covariação (relação entre variáveis), pensamento recursivo (padrão passo a passo) e generalização (expressão algébrica)."
+        },
+        {
+            id: 9,
+            semana: 4,
+            texto: "Sobre o Pensamento Algébrico (PA) e sua relação com a linguagem formal, analise as afirmações:<br><br>I - PA manifesta-se por regularidades e generalização, mesmo sem símbolos formais.<br>II - Álgebra deve ser entendida apenas como técnicas algorítmicas.<br>III - PA pode desenvolver-se antes ou simultaneamente ao pensamento aritmético.<br><br>É correto o que se afirma em:",
+            alternativas: ["A. II, apenas.", "B. I, apenas.", "C. I e II, apenas.", "D. I, II e III.", "E. I e III, apenas."],
+            correta: "E",
+            explicacao: "I e III são verdadeiras. II é falsa (a álgebra também é forma de pensamento, não só técnicas)."
+        },
+        {
+            id: 10,
+            semana: 4,
+            texto: "Considere as asserções sobre o sinal de igualdade:<br><br>I - Entendê-lo apenas como 'resultado é' (visão operacional) atrapalha a aprendizagem da álgebra.<br>II - A álgebra exige que o sinal de igual seja compreendido em sua função relacional (equivalência, como balança).<br><br>A respeito dessas asserções:",
+            alternativas: [
+                "A. I e II verdadeiras, mas II não justifica I.",
+                "B. I e II falsas.",
+                "C. I e II verdadeiras, e II justifica I.",
+                "D. I falsa, II verdadeira.",
+                "E. I verdadeira, II falsa."
+            ],
+            correta: "C",
+            explicacao: "Ambas verdadeiras e a visão relacional é a razão pela qual a visão operacional é um entrave."
+        },
+        // SEMANA 5
+        {
+            id: 11,
+            semana: 5,
+            texto: "Analise as afirmações sobre o conceito de vértice discutido em sala:<br><br>I - Vértice de um poliedro é obrigatoriamente o encontro de apenas três arestas.<br>II - Na pirâmide de base pentagonal, o vértice superior é formado por cinco arestas.<br>III - Vértice pode ser definido como ponto de encontro de três ou mais arestas.<br><br>Está correto o que se afirma em:",
+            alternativas: ["A. II e III apenas.", "B. I apenas.", "C. I e II apenas.", "D. II apenas.", "E. I, II e III."],
+            correta: "A",
+            explicacao: "I é falsa (pode ser mais de três arestas). II e III são verdadeiras."
+        },
+        {
+            id: 12,
+            semana: 5,
+            texto: "Um poliedro é classificado como não convexo quando:",
+            alternativas: [
+                "A. existe pelo menos um par de pontos em seu interior cujo segmento de reta passa, em algum trecho, pelo exterior do sólido.",
+                "B. todas as faces são polígonos regulares congruentes.",
+                "C. V - A + F = 2.",
+                "D. toda reta não paralela às faces o intersecta em, no máximo, dois pontos.",
+                "E. possui pelo menos uma face circular."
+            ],
+            correta: "A",
+            explicacao: "Essa é a definição de poliedro não convexo (côncavo)."
+        },
+        {
+            id: 13,
+            semana: 5,
+            texto: "Em um sistema de coordenadas cartesianas, um personagem desloca-se 3 unidades para a direita e 2 para cima. O vetor deslocamento do ponto A ao ponto B é:",
+            alternativas: [
+                "A. (–3, –2)",
+                "B. (0,0)",
+                "C. (2,3)",
+                "D. (3,2)",
+                "E. (3,–2)"
+            ],
+            correta: "D",
+            explicacao: "Direita: +3; Cima: +2 → vetor (3,2)."
+        },
+        {
+            id: 14,
+            semana: 5,
+            texto: "Um poliedro é um sólido geométrico limitado por:",
+            alternativas: [
+                "A. linhas retas apenas.",
+                "B. circunferências.",
+                "C. pontos isolados.",
+                "D. faces planas em forma de polígonos.",
+                "E. superfícies curvas."
+            ],
+            correta: "D",
+            explicacao: "Poliedros são formados exclusivamente por faces planas poligonais."
+        },
+        // SEMANA 6
+        {
+            id: 15,
+            semana: 6,
+            texto: "Associe as grandezas às suas definições:<br><br>I - Volume<br>II - Capacidade<br>III - Perímetro<br><br>Coluna II:<br>A - Espaço interno de um recipiente (quanto pode conter).<br>B - Comprimento da fronteira ou contorno de uma figura plana.<br>C - Porção de espaço ocupada por um corpo sólido (extensão externa).",
+            alternativas: [
+                "A. I-A, II-C, III-B",
+                "B. I-C, II-B, III-A",
+                "C. I-A, II-B, III-C",
+                "D. I-C, II-A, III-B",
+                "E. I-B, II-A, III-C"
+            ],
+            correta: "D",
+            explicacao: "Volume = espaço externo (C); Capacidade = espaço interno (A); Perímetro = contorno (B)."
+        },
+        {
+            id: 16,
+            semana: 6,
+            texto: "Em uma medição da lousa, grupo A usou palitos inteiros (medida 50) e grupo B usou metades (medida 100). Avalie as asserções:<br><br>I - Ambos os procedimentos estão corretos (iteração sem lacunas). A variação evidencia a relação inversa entre unidade e valor numérico.<br>II - v = d/u; reduzindo u pela metade, v dobra.<br><br>Sobre essas asserções:",
+            alternativas: [
+                "A. I e II falsas.",
+                "B. I e II verdadeiras, e II justifica I.",
+                "C. I verdadeira, II falsa.",
+                "D. I e II verdadeiras, mas II não justifica I.",
+                "E. I falsa, II verdadeira."
+            ],
+            correta: "B",
+            explicacao: "Ambas verdadeiras e a relação matemática v = d/u justifica a inversão."
+        },
+        {
+            id: 17,
+            semana: 6,
+            texto: "Para que os alunos compreendam a medição como comparação de grandezas, o professor deve esclarecer que a lajota física atua como [I] e a magnitude de sua superfície (atributo bidimensional) representa [II].<br><br>Os termos I e II são:",
+            alternativas: [
+                "A. I - valor numérico, II - magnitude da grandeza",
+                "B. I - fenômeno da medida, II - iteração da unidade",
+                "C. I - unidade de medida, II - instrumento de medida",
+                "D. I - perímetro; II - área",
+                "E. I - instrumento de medida, II - unidade de medida"
+            ],
+            correta: "E",
+            explicacao: "A lajota física é o instrumento; sua superfície é a unidade de medida (área)."
+        },
+        {
+            id: 18,
+            semana: 6,
+            texto: "Definição correta do processo de medição:",
+            alternativas: [
+                "A. Comparação entre magnitudes de mesma espécie para verificar quantas vezes a unidade cabe no todo.",
+                "B. Estudo isolado de números inteiros.",
+                "C. Decorar fórmulas para cálculo de áreas.",
+                "D. Uso exclusivo de instrumentos digitais.",
+                "E. Atribuir nome subjetivo a um fenômeno."
+            ],
+            correta: "A",
+            explicacao: "Medir é comparar grandezas da mesma natureza (Caraça)."
+        },
+        // SEMANA 7
+        {
+            id: 19,
+            semana: 7,
+            texto: "Qual é a principal finalidade de incluir conceitos de Estatística e Probabilidade na Educação Básica?",
+            alternativas: [
+                "A. Formar especialistas em cálculos estatísticos avançados.",
+                "B. Ensinar apenas a construção técnica de gráficos e tabelas.",
+                "C. Substituir outros conteúdos da Matemática.",
+                "D. Promover a formação cidadã e a leitura crítica das informações baseadas em dados.",
+                "E. Preparar alunos apenas para vestibulares e concursos."
+            ],
+            correta: "D",
+            explicacao: "O letramento estatístico visa a cidadania crítica, não o tecnicismo."
+        },
+        {
+            id: 20,
+            semana: 7,
+            texto: "Em um gráfico de colunas, para evitar distorções visuais (como eixo truncado), o eixo vertical deve:",
+            alternativas: [
+                "A. começar em qualquer número para economizar espaço.",
+                "B. começar obrigatoriamente no zero.",
+                "C. começar no maior valor da pesquisa.",
+                "D. não apresentar escala numérica.",
+                "E. apresentar apenas os valores escritos nas colunas."
+            ],
+            correta: "B",
+            explicacao: "Gráficos de colunas/barras devem ter eixo vertical iniciado em zero para manter a proporção real dos dados."
+        }
+    ];
+
+
+    // ===================== LÓGICA DE NAVEGAÇÃO =====================
+    let indexAtual = 0;
+    const container = document.getElementById('questoes-container');
+    const btnAnterior = document.getElementById('btn-anterior');
+    const btnProximo = document.getElementById('btn-proximo');
+    const contadorSpan = document.getElementById('contador');
+
+    // Armazenar respostas do usuário (por id da questão, guarda a letra selecionada e se já respondeu)
+    let respostasUsuario = {};
+
+    function renderizarQuestao() {
+        const q = questoes[indexAtual];
+        if (!q) return;
+
+        // Verifica se já foi respondida para pré-selecionar
+        const respostaSalva = respostasUsuario[q.id];
+        const letraSelecionada = respostaSalva ? respostaSalva.letra : null;
+
+        let html = `
+            <div class="question-card">
+                <div class="question-header">
+                    <span>📌 Questão ${indexAtual+1}</span>
+                    <span class="semana-badge">Semana ${q.semana}</span>
+                </div>
+                <div class="question-body">
+                    <div class="question-text">${q.texto}</div>
+                    <div class="alternativas" id="alternativas-${q.id}">
+        `;
+
+        q.alternativas.forEach((alt, idx) => {
+            const letra = String.fromCharCode(65 + idx); // A, B, C, D, E
+            const checkedAttr = (letraSelecionada === letra) ? 'checked' : '';
+            html += `
+                <div class="alternativa" data-letra="${letra}" data-id="${q.id}">
+                    <input type="radio" name="questao-${q.id}" value="${letra}" id="alt-${q.id}-${letra}" ${checkedAttr}>
+                    <label for="alt-${q.id}-${letra}">${alt}</label>
+                </div>
+            `;
+        });
+
+        // Se já respondeu, mostrar feedback
+        let feedbackHtml = '';
+        if (respostaSalva && respostaSalva.acertou !== undefined) {
+            const acertou = respostaSalva.acertou;
+            feedbackHtml = `
+                <div class="feedback ${acertou ? 'correct' : 'incorrect'}" style="display: block;">
+                    ${acertou ? '✅ Correto!' : '❌ Incorreto!'}
+                    <div class="explicacao">📖 ${q.explicacao}</div>
+                </div>
+            `;
+        }
+
+        html += `
+                    </div>
+                    <button class="btn-responder" data-id="${q.id}">✓ Verificar resposta</button>
+                    ${feedbackHtml}
+                </div>
+            </div>
+        `;
+
+        container.innerHTML = html;
+
+        // Adicionar eventos aos radio buttons para destacar a alternativa selecionada
+        document.querySelectorAll(`.alternativa[data-id="${q.id}"]`).forEach(altDiv => {
+            const radio = altDiv.querySelector('input[type="radio"]');
+            radio.addEventListener('change', () => {
+                // Remove classe selected de todas alternativas desta questão
+                document.querySelectorAll(`.alternativa[data-id="${q.id}"]`).forEach(div => {
+                    div.classList.remove('selected');
+                });
+                if (radio.checked) {
+                    altDiv.classList.add('selected');
+                }
+            });
+            // Se já estava marcado, adiciona classe selected
+            if (radio.checked) {
+                altDiv.classList.add('selected');
+            }
+        });
+
+        // Evento do botão verificar
+        const btnResponder = document.querySelector(`.btn-responder[data-id="${q.id}"]`);
+        btnResponder.addEventListener('click', () => verificarResposta(q.id));
+    }
+
+    function verificarResposta(questaoId) {
+        const q = questoes.find(q => q.id === questaoId);
+        if (!q) return;
+
+        const radioSelecionado = document.querySelector(`input[name="questao-${q.id}"]:checked`);
+        if (!radioSelecionado) {
+            alert("Selecione uma alternativa antes de verificar.");
+            return;
+        }
+
+        const letraSelecionada = radioSelecionado.value;
+        const acertou = (letraSelecionada === q.correta);
+
+        // Salvar resposta
+        respostasUsuario[q.id] = {
+            letra: letraSelecionada,
+            acertou: acertou
+        };
+
+        // Re-renderizar a questão atual para mostrar o feedback
+        renderizarQuestao();
+    }
+
+    function atualizarContador() {
+        contadorSpan.textContent = `Questão ${indexAtual+1} de ${questoes.length}`;
+    }
+
+    function irParaProximo() {
+        if (indexAtual < questoes.length - 1) {
+            indexAtual++;
+            renderizarQuestao();
+            atualizarContador();
+        }
+    }
+
+    function irParaAnterior() {
+        if (indexAtual > 0) {
+            indexAtual--;
+            renderizarQuestao();
+            atualizarContador();
+        }
+    }
+
+    btnProximo.addEventListener('click', irParaProximo);
+    btnAnterior.addEventListener('click', irParaAnterior);
+
+    // Inicializar
+    renderizarQuestao();
+    atualizarContador();
+</script>
+</body>
+</html>

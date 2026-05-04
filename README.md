@@ -49,6 +49,12 @@ Um sistema de **botões clicáveis** que exibe, sob demanda, conteúdos detalhad
 
 **Diferencial:** Cada clique **substitui** o conteúdo exibido anteriormente (não acumula), mantendo a área de visualização sempre limpa e focada no último tópico selecionado. Não há botão de "limpar" – a própria substituição já organiza o estudo por tópico.
 
+### 📝 Questões de Revisão
+Um banco de **20 questões objetivas** que abrangem todas as 7 semanas da disciplina. Cada questão apresenta enunciado, alternativas e, após a resposta, fornece feedback imediato com explicação detalhada (gabarito comentado).  
+- Navegação entre questões por meio dos botões "Anterior" e "Próximo".
+- O usuário pode verificar suas respostas e revisar conteúdos de forma autônoma.
+- Acesso disponível a partir do menu principal (botão "📝 Questões de revisão das 7 semanas").
+
 ### 📖 Síntese Teórica
 Um painel lateral de consulta rápida com os resumos essenciais dos textos base e videoaulas, disponível em todas as semanas.
 
@@ -87,6 +93,8 @@ projeto/
 |-- semana6.html
 
 |-- semana7.html
+
+|-- questoes.html
 
 |-- SEP401_apostila_semana1.pdf
 
