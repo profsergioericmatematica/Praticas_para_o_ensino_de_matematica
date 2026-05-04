@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Práticas para o Ensino da Matemática I - Univesp | Semana 6</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #eef2f8; padding: 24px 16px; color: #1a2c3e;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        .btn-voltar-fixo {
+            position: fixed; bottom: 24px; left: 24px; background: #1f4e6e; color: white;
+            padding: 12px 20px; border-radius: 40px; text-decoration: none; font-weight: bold;
+            font-size: 0.95rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999;
+            display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;
+        }
+        .btn-voltar-fixo:hover { background: #2c7da0; transform: translateY(-3px); }
+        @media (max-width: 780px) { .btn-voltar-fixo { bottom: 16px; left: 16px; padding: 10px 16px; font-size: 0.85rem; } }
+        .app-header { text-align: center; margin-bottom: 28px; padding: 0 16px; }
+        .app-header h1 { color: #1f4e6e; font-size: 1.8rem; margin-bottom: 8px; font-weight: 800; }
+        .app-header h2 { color: #2c7da0; font-size: 1.15rem; font-weight: 500; }
+        .app-footer { margin-top: auto; text-align: center; padding: 24px 16px 16px; font-size: 0.95rem; color: #334155; }
+        .app-footer a { color: #1f7a5a; text-decoration: none; font-weight: bold; }
+        .app-container { max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; width: 100%; }
+        .main-panel { flex: 2; min-width: 280px; background: white; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 40px; }
+        .tab-bar { display: flex; flex-wrap: wrap; background: #f1f5f9; border-bottom: 1px solid #cbd5e1; }
+        .tab-btn { flex: 1; padding: 12px 8px; font-weight: bold; background: transparent; border: none; cursor: pointer; font-size: 0.9rem; transition: 0.2s; color: #334155; }
+        .tab-btn.active { background: white; color: #0f2b3d; border-bottom: 3px solid #2c7da0; }
+        .download-pdf { background: #2c7da0; color: white; border: none; border-radius: 40px; padding: 6px 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin: 8px 12px 8px auto; display: flex; align-items: center; gap: 6px; text-decoration: none; }
+        .download-pdf:hover { background: #1f5e7a; }
+        .tab-content { padding: 1.8rem; display: none; }
+        .tab-content.active-tab { display: block; }
+        .flashcard-3d { background-color: transparent; width: 100%; min-height: 320px; perspective: 1000px; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; min-height: 320px; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 1.5rem; }
+        .flashcard-3d.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flash-front, .flash-back { position: absolute; width: 100%; min-height: 320px; backface-visibility: hidden; border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .flash-front { background: #f8fafd; border: 2px solid #e2edf2; color: #1f4e6e; }
+        .flash-back { background: #1f4e6e; color: white; transform: rotateY(180deg); border: 2px solid #2c7da0; }
+        .flash-sigla { font-size: 1.8rem; font-weight: 800; }
+        .flash-desc { font-size: 0.9rem; margin-top: 1rem; line-height: 1.4; }
+        .flash-example { font-size: 0.8rem; margin-top: 1rem; font-style: italic; }
+        .flash-nav { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .flash-nav button, .mode-reset { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-weight: 500; }
+        .mode-reset { background: #cbd5e1; margin-left: 12px; }
+        .scenario-card { background: #f8fafd; border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; border-left: 6px solid #2c7da0; font-size: 1rem; font-weight: 500; }
+        .btn-hint { background: #ffecb3; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; margin-right: 8px; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 1.5rem 0; }
+        .option-btn { background: white; border: 1.5px solid #cbd5e1; border-radius: 60px; padding: 12px; font-weight: 500; font-size: 0.85rem; cursor: pointer; text-align: center; }
+        .option-btn:hover { background: #e2edf2; border-color: #2c7da0; }
+        .feedback-area { background: #f1f5f9; border-radius: 1.2rem; padding: 1rem; margin-top: 1rem; }
+        .explanation { display: none; background: #e9f4fe; padding: 1rem; border-radius: 1rem; margin-top: 0.8rem; font-size: 0.9rem; }
+        .next-btn { background: #1f7a5a; color: white; border: none; border-radius: 40px; padding: 10px 24px; font-weight: bold; cursor: pointer; margin-top: 1rem; display: none; width: 100%; }
+        .score-bar { display: flex; justify-content: space-between; background: #eef2f5; border-radius: 60px; padding: 10px 18px; margin-top: 20px; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .theory-panel { flex: 1.2; min-width: 260px; background: white; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.08); position: sticky; top: 20px; max-height: 85vh; overflow-y: auto; }
+        .theory-header { background: #1f4e6e; color: white; padding: 1rem 1.5rem; border-radius: 2rem 2rem 0 0; font-weight: bold; }
+        .theory-content { padding: 1.2rem 1.5rem; }
+        .concept-grid { display: grid; gap: 12px; font-size: 0.85rem; margin-bottom: 1rem; }
+        .concept-card { background: #f8fafc; padding: 12px; border-radius: 16px; border-left: 4px solid #2c7da0; line-height: 1.4; }
+        .gold-dicas { background: #fef7e0; border-radius: 1rem; padding: 1rem; margin-top: 0.5rem; font-size: 0.85rem; }
+        .sequencia-area { background: #fefce8; border-radius: 1.5rem; padding: 1.2rem; margin-top: 10px; border-left: 6px solid #2c7da0; }
+        .sequencia-header h3 { font-size: 1.2rem; color: #1f4e6e; margin-bottom: 16px; }
+        .sequencia-lista { max-height: 400px; overflow-y: auto; padding-right: 8px; }
+        .sequencia-item { background: white; padding: 12px 16px; margin-bottom: 10px; border-radius: 1rem; border-left: 4px solid #2c7da0; font-size: 0.9rem; position: relative; }
+        .btn-nota { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px; vertical-align: middle; }
+        .nota-texto { display: block; margin-top: 8px; font-size: 0.8rem; background: #fef7e0; padding: 8px; border-radius: 8px; }
+        .button-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
+        .info-btn { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 40px; padding: 8px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .info-btn:hover { background: #e2edf2; border-color: #2c7da0; transform: translateY(-2px); }
+        .categoria-titulo { font-weight: bold; margin: 15px 0 8px 0; color: #1f4e6e; width: 100%; border-left: 3px solid #2c7da0; padding-left: 8px; }
+        @keyframes confete { 0% { opacity: 1; transform: translateY(0) rotate(0deg); } 100% { opacity: 0; transform: translateY(-100px) rotate(720deg); } }
+        .confete { position: fixed; bottom: 0; left: 50%; width: 10px; height: 10px; background: gold; animation: confete 1s ease-out forwards; pointer-events: none; z-index: 10000; }
+        button:focus-visible, a:focus-visible { outline: 2px solid #2c7da0; outline-offset: 2px; }
+        @media (max-width: 780px) { .app-container { flex-direction: column; } .theory-panel { position: static; max-height: none; } }
+        @media (max-width: 320px) { .info-btn { min-width: 100px; font-size: 0.7rem; padding: 6px 8px; } .tab-btn { font-size: 0.75rem; padding: 8px 4px; } }
+    </style>
+</head>
+<body>
+<a href="index.html" class="btn-voltar-fixo" aria-label="Voltar ao menu principal">⬅️ Voltar ao Menu</a>
+<header class="app-header">
+    <h1>Práticas para o Ensino da Matemática I - Univesp</h1>
+    <h2>Semana 6 - Estudos e práticas pedagógicas de grandezas e medidas</h2>
+    <div style="margin-top: 10px;"><button id="audioToggleBtn" aria-label="Ativar/desativar sons" style="background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer;">🔊 Som ativado</button></div>
+</header>
+<div class="app-container">
+    <div class="main-panel">
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="flash">📇 Flashcards</button>
+            <button class="tab-btn" data-tab="quiz">🎯 Quiz</button>
+            <button class="tab-btn" data-tab="assoc">🔗 Associação</button>
+            <button class="tab-btn" data-tab="comparativo">📊 Comparativo (V/F)</button>
+            <button class="tab-btn" data-tab="interativo">🧠 Mapa Interativo</button>
+            <a href="SEP401_apostila_semana6.pdf" target="_blank" class="download-pdf" title="Abrir resumo Semana 6 em PDF">📄 Resumo S6 (PDF)</a>
+        </div>
+
+        <!-- FLASHCARDS -->
+        <div id="tabFlash" class="tab-content active-tab">
+            <div style="display: flex; justify-content: flex-end;"><button id="resetFlashMode" class="mode-reset">🔄 Reiniciar Flashcards</button></div>
+            <div class="flashcard-3d" id="flashcard3d" tabindex="0" role="button">
+                <div class="flashcard-inner">
+                    <div class="flash-front"><div class="flash-sigla" id="frontSigla">Carregando...</div><div class="flash-desc">Clique para virar</div></div>
+                    <div class="flash-back"><div class="flash-sigla" id="backSigla"></div><div class="flash-desc" id="backDesc"></div><div class="flash-example" id="backExample"></div></div>
+                </div>
+            </div>
+            <div id="flashCounter" style="text-align:center; margin-top:15px;"></div>
+            <div class="flash-nav"><button id="prevFlash">◀ Anterior</button><button id="nextFlash">Próxima ▶</button></div>
+        </div>
+
+        <!-- QUIZ -->
+        <div id="tabQuiz" class="tab-content">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                <button id="resetQuizMode" class="mode-reset">🔄 Reiniciar Quiz</button>
+                <button id="revisarErrosBtn" class="mode-reset" style="display: none;">📚 Revisar erros</button>
+            </div>
+            <div id="scenarioCard" class="scenario-card">Carregando...</div>
+            <div><button id="hintBtn" class="btn-hint">💡 Dica</button><div id="hintBox" style="background:#fff8e7; padding:0.5rem; border-radius:1rem; display:none; margin-top:0.5rem;"></div></div>
+            <div id="optionsContainer" class="options-grid"></div>
+            <div class="feedback-area"><div id="feedbackMsg" class="feedback-text"></div><div id="explanationBox" class="explanation"></div><button id="nextBtn" class="next-btn">➡️ Próxima questão</button></div>
+            <div class="score-bar"><span>✅ Acertos: <span id="hitsCount">0</span></span><span>📋 Restantes: <span id="remainingCount">0</span></span></div>
+            <div id="quizConcluidoMsg" style="display: none; margin-top: 15px; background: #d4edda; padding: 10px; border-radius: 12px; text-align: center;">🏆 Parabéns! Você concluiu o quiz. Use "Revisar erros" para fixar.</div>
+        </div>
+
+        <!-- ASSOCIAÇÃO -->
+        <div id="tabAssoc" class="tab-content">
+            <div style="display: flex; justify-content: flex-end;"><button id="resetAssocMode" class="mode-reset">🔄 Reiniciar Associação</button></div>
+            <div id="assocQuestion" class="scenario-card">Relacione o conceito: <br><br><strong id="assocSigla"></strong></div>
+            <div id="assocOptions" class="options-grid"></div>
+            <div id="assocFeedback" class="feedback-text" style="margin-top:1rem;"></div>
+            <button id="nextAssoc" class="next-btn" style="display:block; background:#2c7da0;">Próxima associação ➡️</button>
+            <div style="margin-top:12px;">Acertos: <span id="assocHits">0</span> / <span id="assocTotal">0</span></div>
+        </div>
+
+        <!-- COMPARATIVO (Verdadeiro/Falso) -->
+        <div id="tabComparativo" class="tab-content">
+            <div style="display: flex; justify-content: flex-end;"><button id="resetCompMode" class="mode-reset">🔄 Reiniciar</button></div>
+            <div id="compQuestion" class="scenario-card"><strong>📌 Analise a afirmação sobre Grandezas e Medidas:</strong><br><br><span id="compConcept"></span></div>
+            <div id="compOptions" class="options-grid"></div>
+            <div id="compFeedback" class="feedback-text" style="margin-top:1rem;"></div>
+            <button id="nextComp" class="next-btn" style="display:block; background:#2c7da0;">Próxima ➡️</button>
+            <div style="margin-top:12px;">Acertos: <span id="compHits">0</span> / <span id="compTotal">0</span></div>
+        </div>
+
+        <!-- MAPA INTERATIVO -->
+        <div id="tabInterativo" class="tab-content">
+            <div class="button-grid">
+                <div class="categoria-titulo">📏 Fundamentos e Conceitos Básicos</div>
+                <button class="info-btn" data-info="medir_conceito">Medir: definição e comparação</button>
+                <button class="info-btn" data-info="grandeza">Grandeza (atributo mensurável)</button>
+                <button class="info-btn" data-info="unidade_medida">Unidade de medida (padronizada e não padronizada)</button>
+                <button class="info-btn" data-info="instrumento_vs_unidade">Instrumento de medida vs unidade</button>
+                <button class="info-btn" data-info="medida_valor_numerico">Medida = valor numérico + unidade</button>
+                <div class="categoria-titulo">🧠 Principios do Pensamento Métrico</div>
+                <button class="info-btn" data-info="iteracao">Iteração da unidade</button>
+                <button class="info-btn" data-info="particao">Partição</button>
+                <button class="info-btn" data-info="transitividade">Transitividade</button>
+                <button class="info-btn" data-info="conservacao">Conservação (comprimento, área, volume)</button>
+                <button class="info-btn" data-info="acumulacao_distancia">Acumulação da distância</button>
+                <div class="categoria-titulo">📐 Área e Perímetro: conceitos avançados</div>
+                <button class="info-btn" data-info="area_definicao">Área: porção do plano delimitada por fronteiras</button>
+                <button class="info-btn" data-info="perimetro_definicao">Perímetro: comprimento total do contorno</button>
+                <button class="info-btn" data-info="fronteira_interna_externa">Perímetro com vazados (fronteira externa + interna)</button>
+                <button class="info-btn" data-info="area_igual_perimetro_diferente">Figuras de mesma área podem ter perímetros diferentes</button>
+                <div class="categoria-titulo">🔄 Relação entre grandeza e unidade</div>
+                <button class="info-btn" data-info="relacao_inversa">Relação inversa: v = d / u</button>
+                <button class="info-btn" data-info="invariante_grandeza">Grandeza invariante, valor numérico variável</button>
+                <div class="categoria-titulo">📚 BNCC: Progressão de Grandezas e Medidas</div>
+                <button class="info-btn" data-info="bncc_anos_iniciais_gm">Anos Iniciais (1º ao 5º) – comparação, unidades não padronizadas, sist. monetário, áreas em malhas</button>
+                <button class="info-btn" data-info="bncc_anos_finais_gm">Anos Finais (6º ao 9º) – volume sem fórmulas, ângulos, plantas baixas, perímetro proporcional</button>
+                <button class="info-btn" data-info="bncc_em_gm">Ensino Médio – notação científica, algarismos significativos, pesquisa amostral, desvio-padrão</button>
+                <div class="categoria-titulo">📋 Pesquisa em formação de professores (Feitosa & Rodrigues, 2025)</div>
+                <button class="info-btn" data-info="mtsk_area_perimetro">MTSK: conhecimento especializado sobre área e perímetro</button>
+                <button class="info-btn" data-info="situacoes_area_perimetro">Situações de comparação, medida, mudança de unidade e produção</button>
+                <div class="categoria-titulo">🧩 Exemplos de tarefas práticas</div>
+                <button class="info-btn" data-info="tarefa_mais_pesado">Qual é o mais pesado? (Educação Infantil)</button>
+                <button class="info-btn" data-info="tarefa_area_malha">Afinal, qual o valor da área? (anos iniciais)</button>
+                <button class="info-btn" data-info="tarefa_comparar_volumes">Comparando volumes (Ensino Médio, cubos empilhados)</button>
+            </div>
+            <div class="sequencia-area">
+                <div class="sequencia-header"><h3>📌 Conteúdo selecionado</h3></div>
+                <div id="sequenciaLista" class="sequencia-lista"><div class="sequencia-item" style="color:#64748b;">Clique em um botão acima para ver o conteúdo.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAINEL TEÓRICO LATERAL -->
+    <div class="theory-panel">
+        <div class="theory-header">📖 Síntese Teórica - Semana 6</div>
+        <div class="theory-content">
+            <div class="concept-grid">
+                <div class="concept-card"><strong>📏 Medir:</strong> comparar duas grandezas da mesma espécie para verificar quantas vezes a unidade cabe no todo (Caraça).</div>
+                <div class="concept-card"><strong>🔢 Grandeza:</strong> atributo mensurável (comprimento, área, massa, tempo, etc.).</div>
+                <div class="concept-card"><strong>📐 Medida:</strong> par (valor numérico + unidade). O número isolado não é medida.</div>
+                <div class="concept-card"><strong>🔁 Princípios métricos:</strong> iteração, partição, transitividade, conservação, acumulação da distância.</div>
+                <div class="concept-card"><strong>🟧 Área:</strong> porção do plano delimitada por fronteiras (interna e externa).</div>
+                <div class="concept-card"><strong>🟩 Perímetro:</strong> comprimento total da(s) fronteira(s).</div>
+                <div class="concept-card"><strong>⚖️ Relação v = d/u:</strong> valor numérico = grandeza / unidade. Reduzindo u, v aumenta proporcionalmente.</div>
+                <div class="concept-card"><strong>📆 BNCC:</strong> Evolução: comparação (1º ano) → unidades padronizadas (3º ano) → áreas e perímetros (4º/5º) → volume e fórmulas (6º ao 9º) → notação científica e pesquisas (EM).</div>
+            </div>
+            <div class="gold-dicas">💡 Dicas: Diferencie sempre grandeza (atributo) de medida (resultado). Use unidades não-padronizadas antes das padrão. Explore a relação v = d/u com situações concretas.</div>
+        </div>
+    </div>
+</div>
+<footer class="app-footer">
+    Desenvolvido por Prof. Sergio Eric | Instagram: <a href="https://instagram.com/prof.sergio.eric.matematica" target="_blank">@prof.sergio.eric.matematica</a> | 2026
+</footer>
+
+<script>
+    // ===================== DADOS =====================
+    const flashcards = [
+        { sigla: "Medir", nome: "Medir", desc: "Comparar duas grandezas da mesma espécie para verificar quantas vezes a unidade de medida cabe no todo.", exemplo: "Comparar o comprimento da lousa com palitos." },
+        { sigla: "Grandeza", nome: "Grandeza", desc: "Atributo de um objeto ou fenômeno que pode ser quantificado por medição ou contagem.", exemplo: "Comprimento, área, massa, tempo, temperatura." },
+        { sigla: "Unidade de medida", nome: "Unidade de medida", desc: "Magnitude de referência da mesma natureza do todo a ser medido.", exemplo: "centímetro, litro, grama, palito de picolé." },
+        { sigla: "Instrumento de medida", nome: "Instrumento", desc: "Recurso físico utilizado no ato de medir (régua, balança, barbante).", exemplo: "Régua, fita métrica, balança, transferidor." },
+        { sigla: "Medida", nome: "Medida", desc: "Resultado da medição: valor numérico + unidade de medida.", exemplo: "85 cm, 140 ml, 7 palitos." },
+        { sigla: "Iteração", nome: "Iteração", desc: "Repetir a unidade de medida ao longo do objeto sem lacunas ou sobreposições.", exemplo: "Colocar palitos um após o outro na lousa." },
+        { sigla: "Partição", nome: "Partição", desc: "Dividir mentalmente o objeto em partes iguais à unidade de medida.", exemplo: "Fracionar o comprimento em segmentos de 1 cm." },
+        { sigla: "Conservação", nome: "Conservação", desc: "O atributo medido não se altera com movimento ou mudança de forma/recipiente.", exemplo: "Água em copo alto/fino vs baixo/largo tem o mesmo volume." },
+        { sigla: "Transitividade", nome: "Transitividade", desc: "Deduzir relação entre objetos sem compará-los diretamente.", exemplo: "Se A = B e B = C, então A = C." },
+        { sigla: "Acumulação da distância", nome: "Acumulação", desc: "Entender que o valor total é a soma das iterações realizadas.", exemplo: "Contar 1,2,3... palitos até cobrir a lousa." },
+        { sigla: "Área", nome: "Área", desc: "Porção do plano delimitada por uma ou mais fronteiras.", exemplo: "Superfície de um retângulo." },
+        { sigla: "Perímetro", nome: "Perímetro", desc: "Comprimento total da(s) fronteira(s) de uma figura.", exemplo: "Soma dos lados de um quadrado." },
+        { sigla: "Relação v = d/u", nome: "v = d/u", desc: "Valor numérico = grandeza / unidade; unidade menor → valor maior.", exemplo: "Palito inteiro → 50; meio palito → 100." },
+        { sigla: "Volume", nome: "Volume", desc: "Porção de espaço ocupada por um corpo tridimensional.", exemplo: "Espaço dentro de uma caixa." },
+        { sigla: "Capacidade", nome: "Capacidade", desc: "Quanto um recipiente pode conter (geralmente líquidos).", exemplo: "1 litro = 1 dm³." }
+    ];
+
+    const quizQuestions = [
+        { text: "O que significa medir, segundo a definição matemática?", correct: "Comparar magnitudes de uma mesma espécie para verificar quantas vezes a unidade cabe no todo", options: ["Atribuir um número subjetivo a um objeto", "Comparar magnitudes de uma mesma espécie para verificar quantas vezes a unidade cabe no todo", "Utilizar apenas instrumentos digitais", "Estimar sem usar unidades"], hint: "Caraça, 1963.", explanation: "Medir é comparar grandezas de mesma natureza." },
+        { text: "Qual dos seguintes pares representa corretamente uma medida?", correct: "150 cm", options: ["150", "150 cm", "comprimento", "régua"], hint: "Medida = valor + unidade.", explanation: "O número isolado não é medida; precisa da unidade." },
+        { text: "Se dobrarmos o comprimento de uma unidade de medida (u), mantendo o mesmo todo, o valor numérico (v)", correct: "Reduz-se à metade", options: ["Dobra", "Reduz-se à metade", "Permanece igual", "Quadruplica"], hint: "Relação inversa v = d/u.", explanation: "v = d/u; dobrando u, v cai pela metade." },
+        { text: "Uma criança acredita que o líquido 'aumentou' ao ser transferido para um copo mais fino. Que princípio ela ainda não desenvolveu?", correct: "Conservação", options: ["Iteração", "Partição", "Transitividade", "Conservação"], hint: "Líquido mudou de recipiente.", explanation: "Conservação: a quantidade não muda com a forma do recipiente." },
+        { text: "Qual grandeza está associada ao 'espaço interno' de um recipiente, indicando quanto ele pode conter?", correct: "Capacidade", options: ["Volume", "Capacidade", "Área", "Perímetro"], hint: "Líquidos.", explanation: "Capacidade (ex: litros). Volume é o espaço ocupado (externo)." },
+        { text: "De acordo com a BNCC, qual habilidade é esperada no 4º ano quanto a área?", correct: "Medir, comparar e estimar área de figuras em malha quadriculada pela contagem de quadradinhos", options: ["Calcular volume de prismas", "Medir, comparar e estimar área de figuras em malha quadriculada pela contagem de quadradinhos", "Converter unidades de comprimento", "Usar transferidor para medir ângulos"], hint: "Anos iniciais, malha quadriculada.", explanation: "EF04MA21: área em malhas quadriculadas." },
+        { text: "Na relação v = d/u, o que permanece invariante quando mudamos a unidade?", correct: "A grandeza d (o atributo do objeto)", options: ["O valor numérico v", "A grandeza d", "A unidade u", "O instrumento de medida"], hint: "É o que está sendo medido.", explanation: "A grandeza (ex: comprimento da lousa) não muda, só o número e a unidade." },
+        { text: "Se uma figura tem um 'buraco', seu perímetro é definido como:", correct: "A soma dos comprimentos das fronteiras externa e interna", options: ["Apenas a fronteira externa", "Apenas a fronteira do buraco", "A soma das fronteiras externa e interna", "A diferença entre a externa e a interna"], hint: "Contorno total ocupado.", explanation: "O perímetro inclui todas as bordas (externas e internas) que limitam a região ocupada." }
+    ];
+
+    const associacoes = [
+        { termo: "Grandeza", definicao: "Atributo mensurável de um objeto ou fenômeno (ex: comprimento, massa, tempo)." },
+        { termo: "Medida", definicao: "Resultado da medição, expresso por um valor numérico seguido da unidade." },
+        { termo: "Iteração", definicao: "Repetir a unidade de medida sucessivamente sem lacunas ou sobreposições." },
+        { termo: "Conservação", definicao: "A grandeza não se altera com mudanças de posição ou de recipiente." },
+        { termo: "Volume", definicao: "Espaço ocupado por um corpo tridimensional." },
+        { termo: "Capacidade", definicao: "Quanto um recipiente pode conter." },
+        { termo: "Perímetro com vazado", definicao: "Soma dos comprimentos das fronteiras externa e interna." },
+        { termo: "Relação v = d / u", definicao: "Valor numérico = grandeza / unidade; relação inversa." }
+    ];
+
+    const comparativoItems = [
+        { afirmacao: "Medir é comparar duas grandezas de espécies diferentes (ex: comprimento com massa).", tipo: "Falso", explicacao: "Medir compara grandezas da MESMA espécie." },
+        { afirmacao: "O número 150 sozinho pode ser considerado uma medida.", tipo: "Falso", explicacao: "Medida precisa de unidade (ex: 150 cm)." },
+        { afirmacao: "Se dobrarmos a unidade de medida (u), o valor numérico (v) também dobra.", tipo: "Falso", explicacao: "Relação inversa: v = d/u, portanto v reduz à metade." },
+        { afirmacao: "A área de uma figura é a porção do plano delimitada por suas fronteiras.", tipo: "Verdadeiro", explicacao: "Definição correta de área." },
+        { afirmacao: "Na BNCC, o estudo de perímetro e área (malhas quadriculadas) inicia no 4º ano.", tipo: "Verdadeiro", explicacao: "EF04MA21: medir, comparar e estimar área de figuras em malha quadriculada." }
+    ];
+
+    const conteudosMapa = {
+        medir_conceito: "📏 Medir: segundo Caraça (1963), 'comparar duas grandezas da mesma espécie – dois comprimentos, dois pesos, dois volumes, etc.' O resultado da medição é a medida (valor + unidade).",
+        grandeza: "🔢 Grandeza: atributo de um objeto ou fenômeno que pode ser quantificado por medição ou contagem. Exemplos: comprimento, área, volume, massa, tempo, temperatura, velocidade, etc. Não se mede 'uma mesa', mas seu comprimento ou largura.",
+        unidade_medida: "📐 Unidade de medida: magnitude de referência da mesma natureza do todo a ser medido. Pode ser padronizada (metro, litro, grama) ou não padronizada (palito, passo, palmo). A escolha da unidade afeta o valor numérico.",
+        instrumento_vs_unidade: "🛠️ Instrumento de medida ≠ unidade: Instrumento é o recurso físico (régua, balança, fita métrica). Unidade é a magnitude de referência. Ex: numa régua, a unidade é o centímetro; o instrumento é a régua.",
+        medida_valor_numerico: "📊 Medida: resultado da medição, expresso por um par indissociável: valor numérico + unidade de medida. Ex: 85 cm. O número 85 sozinho não é medida, é apenas a quantidade de iterações.",
+        iteracao: "🔄 Iteração: habilidade de repetir a unidade de medida sucessivamente ao longo do objeto, sem deixar lacunas nem sobrepor as unidades. É a base física da medição.",
+        particao: "✂️ Partição: dividir mentalmente o objeto a ser medido em partes iguais à unidade de medida. Necessário quando a unidade é menor que o todo.",
+        transitividade: "🔁 Transitividade: capacidade de deduzir relações entre objetos sem compará-los diretamente. Ex: se A tem mesmo comprimento que B e B tem mesmo comprimento que C, então A e C têm mesmo comprimento.",
+        conservacao: "🧩 Conservação: compreensão de que o atributo medido (comprimento, área, volume) não se altera quando o objeto é movido, rotacionado ou quando o líquido muda de recipiente. Desafio visual comum na infância.",
+        acumulacao_distancia: "📈 Acumulação da distância: entender que, à medida que se itera a unidade, o valor total é a soma das repetições até aquele ponto. Relaciona contagem e medição.",
+        area_definicao: "🟧 Área: porção do plano delimitada por uma ou mais fronteiras. Grandeza bidimensional (comprimento x largura). Tangram ilustra conservação da área: mesmas peças formam figuras de diferentes formatos com mesma área.",
+        perimetro_definicao: "🟩 Perímetro: comprimento total do contorno de uma figura. Grandeza unidimensional. Em figuras com vazados, soma-se a borda externa e as bordas internas dos buracos.",
+        fronteira_interna_externa: "🔲 Perímetro com vazados: se a figura tem um buraco, o perímetro = comprimento da fronteira externa + comprimento da(s) fronteira(s) interna(s). Ex: figura do Tangram com o ‘buraco’ central.",
+        area_igual_perimetro_diferente: "📏 Figuras de mesma área podem ter perímetros diferentes. Ex: retângulos de área 12 ua (1x12, 2x6, 3x4) têm perímetros 26, 16 e 14 uc. É um conceito essencial a ser explorado.",
+        relacao_inversa: "⚖️ Relação inversa: v = d / u (valor numérico = grandeza / unidade). Mantendo d constante, se u reduz à metade, v dobra. Ex: lousa com palito inteiro → 50; com meio palito → 100.",
+        invariante_grandeza: "🎯 Grandeza invariante, valor numérico variável: o atributo físico (ex: comprimento da lousa) é invariável. O que muda é o número e a unidade usados para expressá-lo.",
+        bncc_anos_iniciais_gm: "📚 BNCC – Anos Iniciais (GM): 1º ano: comparações (mais alto, mais pesado). 2º: unidades não padronizadas e padronizadas (metro, litro). 3º: escolha do instrumento. 4º: área em malhas. 5º: perímetro vs área, volume por empilhamento.",
+        bncc_anos_finais_gm: "📚 BNCC – Anos Finais (GM): 6º: volume sem fórmulas, ângulos, plantas baixas. 7º: volume de blocos retangulares, área de triângulos e quadriláteros, π. 8º: área do círculo, relação dm³ ↔ litro.",
+        bncc_em_gm: "📚 BNCC – Ensino Médio: EM13MAT103 – interpretar unidades de medida; EM13MAT202 – pesquisa amostral e desvio-padrão; EM13MAT307 – diferentes métodos para área; EM13MAT313 – notação científica e algarismos significativos; EM13MAT316 – medidas de dispersão.",
+        mtsk_area_perimetro: "👩‍🏫 Pesquisa (Feitosa & Rodrigues, 2025): utilizou o modelo MTSK para analisar conhecimento de futuros professores sobre área e perímetro. Evidenciaram conhecimentos sobre definições, propriedades, fenomenologia e procedimentos.",
+        situacoes_area_perimetro: "📝 Situações didáticas (Douady, Baltar): comparação (estática/dinâmica), medida (exata/enquadramento), mudança de unidade, produção (superfícies de mesma área ou mesmo perímetro).",
+        tarefa_mais_pesado: "⚖️ Tarefa ‘qual é o mais pesado?’ (Educação Infantil): comparar embalagens iguais com pesos diferentes. Objetivo: desenvolver comparação de massas e estimativa.",
+        tarefa_area_malha: "📐 Tarefa ‘afinal, qual o valor da área?’ (anos iniciais): envelopes com quadrados para cobrir retângulos. Objetivo: medir área por iteração, comparar estratégias.",
+        tarefa_comparar_volumes: "🧊 Tarefa ‘comparando volumes’ (Ensino Médio): sólidos compostos de cubinhos (alguns não visíveis). Objetivo: comparar volumes sem fórmula, contando cubos mentalmente."
+    };
+
+    // ===================== LÓGICA =====================
+    let somAtivado = localStorage.getItem('somAtivado_s6') !== 'false';
+    const audioToggle = document.getElementById('audioToggleBtn');
+    function playSom(tipo) {
+        if (!somAtivado) return;
+        try {
+            let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            gain.gain.value = 0.1;
+            if (tipo === 'acerto') { osc.frequency.value = 880; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5); }
+            else if (tipo === 'erro') { osc.frequency.value = 440; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5); }
+            else if (tipo === 'flash') { osc.frequency.value = 660; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3); }
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } catch(e) {}
+    }
+    audioToggle.textContent = somAtivado ? "🔊 Som ativado" : "🔇 Som desativado";
+    audioToggle.addEventListener('click', () => { somAtivado = !somAtivado; localStorage.setItem('somAtivado_s6', somAtivado); audioToggle.textContent = somAtivado ? "🔊 Som ativado" : "🔇 Som desativado"; });
+
+    // Flashcards
+    let flashIndex = 0, isFlipped = false;
+    const flashContainer = document.getElementById('flashcard3d');
+    const frontSigla = document.getElementById('frontSigla');
+    const backSigla = document.getElementById('backSigla');
+    const backDesc = document.getElementById('backDesc');
+    const backExample = document.getElementById('backExample');
+    const flashCounter = document.getElementById('flashCounter');
+    function updateFlash() {
+        const item = flashcards[flashIndex % flashcards.length];
+        frontSigla.innerText = item.sigla;
+        backSigla.innerText = `${item.sigla}`;
+        backDesc.innerText = item.desc;
+        backExample.innerText = `📘 Exemplo: ${item.exemplo}`;
+        flashCounter.innerText = `${flashIndex+1}/${flashcards.length}`;
+        if (isFlipped) { flashContainer.classList.remove('flipped'); isFlipped=false; }
+    }
+    function flipCard() { flashContainer.classList.toggle('flipped'); isFlipped=!isFlipped; playSom('flash'); }
+    function prevFlash() { flashIndex=(flashIndex-1+flashcards.length)%flashcards.length; updateFlash(); }
+    function nextFlash() { flashIndex=(flashIndex+1)%flashcards.length; updateFlash(); }
+    function resetFlash() { flashIndex=0; updateFlash(); if(isFlipped) flipCard(); }
+    document.getElementById('prevFlash').onclick = prevFlash;
+    document.getElementById('nextFlash').onclick = nextFlash;
+    document.getElementById('resetFlashMode').onclick = resetFlash;
+    flashContainer.onclick = flipCard;
+    updateFlash();
+    document.addEventListener('keydown', (e) => {
+        if (document.getElementById('tabFlash').classList.contains('active-tab')) {
+            if (e.key === 'ArrowLeft') { prevFlash(); e.preventDefault(); }
+            else if (e.key === 'ArrowRight') { nextFlash(); e.preventDefault(); }
+        }
+    });
+
+    // Quiz
+    let quizCurrent = 0, quizHits = 0, quizAnswered = false;
+    let questoesErradas = [];
+    let modoRevisao = false;
+    let questoesRevisao = [];
+    let revisaoIndex = 0;
+    const quizTotal = quizQuestions.length;
+    const scenarioDiv = document.getElementById('scenarioCard');
+    const optionsDiv = document.getElementById('optionsContainer');
+    const hintBtn = document.getElementById('hintBtn');
+    const hintBox = document.getElementById('hintBox');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    const explanationBox = document.getElementById('explanationBox');
+    const nextBtn = document.getElementById('nextBtn');
+    const hitsSpan = document.getElementById('hitsCount');
+    const remainingSpan = document.getElementById('remainingCount');
+    const resetQuizBtn = document.getElementById('resetQuizMode');
+    const revisarErrosBtn = document.getElementById('revisarErrosBtn');
+    const quizConcluidoMsg = document.getElementById('quizConcluidoMsg');
+    function mostrarConfete() { for (let i=0;i<30;i++) { let c=document.createElement('div'); c.className='confete'; c.style.left=Math.random()*100+'%'; c.style.backgroundColor=`hsl(${Math.random()*360},80%,60%)`; document.body.appendChild(c); setTimeout(()=>c.remove(),1000); } }
+    function carregarQuiz() {
+        quizAnswered = false;
+        const q = modoRevisao ? questoesRevisao[revisaoIndex] : quizQuestions[quizCurrent];
+        scenarioDiv.innerHTML = modoRevisao ? `[REVISÃO] ${q.text}` : q.text;
+        feedbackMsg.innerHTML = "";
+        explanationBox.style.display = "none";
+        hintBox.style.display = "none";
+        nextBtn.style.display = "none";
+        hintBtn.disabled = false;
+        optionsDiv.innerHTML = "";
+        q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkQuizAnswer(opt, q);
+            optionsDiv.appendChild(btn);
+        });
+        remainingSpan.innerText = modoRevisao ? questoesRevisao.length - revisaoIndex : quizTotal - quizCurrent;
+        hitsSpan.innerText = quizHits;
+        document.querySelectorAll('.option-btn').forEach(b=>b.disabled=false);
+    }
+    function checkQuizAnswer(selected, q) {
+        if (quizAnswered) return;
+        quizAnswered = true;
+        const isCorrect = (selected === q.correct);
+        if (isCorrect) {
+            feedbackMsg.innerHTML = `✅ Correto! "${selected}" é a resposta certa.`;
+            feedbackMsg.style.color = "#1f7a5a";
+            if (!modoRevisao) quizHits++;
+            playSom('acerto');
+        } else {
+            feedbackMsg.innerHTML = `❌ Incorreto. A resposta certa é "${q.correct}".`;
+            feedbackMsg.style.color = "#c0392b";
+            if (!modoRevisao) questoesErradas.push(q);
+            else questoesRevisao.push(q);
+            playSom('erro');
+        }
+        hitsSpan.innerText = quizHits;
+        explanationBox.innerHTML = `<strong>📖 Explicação:</strong><br>${q.explanation}<br><br><strong>🔍 Dica:</strong> ${q.hint}`;
+        explanationBox.style.display = "block";
+        nextBtn.style.display = "block";
+        hintBtn.disabled = true;
+        document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
+    }
+    function avancarQuiz() {
+        if (!quizAnswered) return;
+        if (modoRevisao) {
+            revisaoIndex++;
+            if (revisaoIndex < questoesRevisao.length) carregarQuiz();
+            else {
+                scenarioDiv.innerHTML = `🏆 Revisão concluída! Acertos totais: ${quizHits}/${quizTotal}.`;
+                optionsDiv.innerHTML = "";
+                nextBtn.style.display = "none";
+                revisarErrosBtn.style.display = "none";
+                feedbackMsg.innerHTML = "";
+                explanationBox.style.display = "none";
+                remainingSpan.innerText = "0";
+                modoRevisao = false;
+                quizConcluidoMsg.style.display = 'block';
+                mostrarConfete();
+            }
+        } else {
+            quizCurrent++;
+            if (quizCurrent < quizTotal) carregarQuiz();
+            else {
+                scenarioDiv.innerHTML = `🏆 Concluído! Acertos: ${quizHits}/${quizTotal}.`;
+                optionsDiv.innerHTML = "";
+                nextBtn.style.display = "none";
+                feedbackMsg.innerHTML = "";
+                explanationBox.style.display = "none";
+                remainingSpan.innerText = "0";
+                if (questoesErradas.length > 0) {
+                    revisarErrosBtn.style.display = "inline-block";
+                    quizConcluidoMsg.style.display = 'block';
+                } else {
+                    revisarErrosBtn.style.display = "none";
+                    quizConcluidoMsg.style.display = 'block';
+                    mostrarConfete();
+                }
+            }
+        }
+    }
+    function iniciarRevisao() {
+        if (questoesErradas.length === 0) return;
+        modoRevisao = true;
+        questoesRevisao = [...questoesErradas];
+        revisaoIndex = 0;
+        revisarErrosBtn.style.display = "none";
+        quizConcluidoMsg.style.display = 'none';
+        carregarQuiz();
+    }
+    function resetQuiz() { quizCurrent=0; quizHits=0; questoesErradas=[]; modoRevisao=false; revisarErrosBtn.style.display="none"; quizConcluidoMsg.style.display="none"; carregarQuiz(); }
+    nextBtn.onclick = avancarQuiz;
+    resetQuizBtn.onclick = resetQuiz;
+    revisarErrosBtn.onclick = iniciarRevisao;
+    hintBtn.onclick = () => { if(!quizAnswered) hintBox.innerHTML = `💡 ${(modoRevisao ? questoesRevisao[revisaoIndex] : quizQuestions[quizCurrent]).hint}`; hintBox.style.display="block"; };
+    carregarQuiz();
+
+    // Associação
+    function shuffleArray(arr) { for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+    let assocIndex=0, assocHits=0, assocAnsweredFlag=false;
+    const assocSiglaSpan = document.getElementById('assocSigla');
+    const assocOptionsDiv = document.getElementById('assocOptions');
+    const assocFeedback = document.getElementById('assocFeedback');
+    const nextAssocBtn = document.getElementById('nextAssoc');
+    const assocHitsSpan = document.getElementById('assocHits');
+    const assocTotalSpan = document.getElementById('assocTotal');
+    const resetAssocBtn = document.getElementById('resetAssocMode');
+    assocTotalSpan.innerText = associacoes.length;
+    function loadAssociation() {
+        assocAnsweredFlag = false;
+        const current = associacoes[assocIndex];
+        assocSiglaSpan.innerText = current.termo;
+        let otherDefs = associacoes.filter(item => item.termo !== current.termo).map(item => item.definicao);
+        otherDefs = shuffleArray([...otherDefs]).slice(0,3);
+        let options = shuffleArray([current.definicao, ...otherDefs]);
+        assocOptionsDiv.innerHTML = "";
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAssociation(opt, current.definicao);
+            assocOptionsDiv.appendChild(btn);
+        });
+        assocFeedback.innerHTML = "";
+    }
+    function checkAssociation(selected, correct) {
+        if (assocAnsweredFlag) return;
+        assocAnsweredFlag = true;
+        if (selected === correct) { assocFeedback.innerHTML = "✅ Correta!"; assocFeedback.style.color="#1f7a5a"; assocHits++; playSom('acerto'); }
+        else { assocFeedback.innerHTML = `❌ Errado. Correta: "${correct}"`; assocFeedback.style.color="#c0392b"; playSom('erro'); }
+        assocHitsSpan.innerText = assocHits;
+        document.querySelectorAll('#assocOptions .option-btn').forEach(b=>b.disabled=true);
+    }
+    function nextAssociation() { if (!assocAnsweredFlag && !confirm("Pular?")) return; assocIndex=(assocIndex+1)%associacoes.length; if(assocIndex===0){ assocHits=0; assocHitsSpan.innerText="0"; } loadAssociation(); }
+    function resetAssoc() { assocIndex=0; assocHits=0; loadAssociation(); }
+    nextAssocBtn.onclick = nextAssociation;
+    resetAssocBtn.onclick = resetAssoc;
+    loadAssociation();
+
+    // Comparativo
+    let compIndex=0, compHits=0, compAnsweredFlag=false;
+    const compConceptSpan = document.getElementById('compConcept');
+    const compOptionsDiv = document.getElementById('compOptions');
+    const compFeedback = document.getElementById('compFeedback');
+    const nextCompBtn = document.getElementById('nextComp');
+    const compHitsSpan = document.getElementById('compHits');
+    const compTotalSpan = document.getElementById('compTotal');
+    const resetCompBtn = document.getElementById('resetCompMode');
+    compTotalSpan.innerText = comparativoItems.length;
+    function loadComparativo() {
+        compAnsweredFlag = false;
+        const current = comparativoItems[compIndex];
+        compConceptSpan.innerText = `"${current.afirmacao}"`;
+        compOptionsDiv.innerHTML = "";
+        const options = ["Verdadeiro", "Falso"];
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkComparativo(opt, current.tipo, current.explicacao);
+            compOptionsDiv.appendChild(btn);
+        });
+        compFeedback.innerHTML = "";
+    }
+    function checkComparativo(selected, correct, explicacao) {
+        if (compAnsweredFlag) return;
+        compAnsweredFlag = true;
+        if (selected === correct) { compFeedback.innerHTML = `✅ Correta! ${explicacao}`; compFeedback.style.color="#1f7a5a"; compHits++; playSom('acerto'); }
+        else { compFeedback.innerHTML = `❌ Incorreto. ${explicacao}`; compFeedback.style.color="#c0392b"; playSom('erro'); }
+        compHitsSpan.innerText = compHits;
+        document.querySelectorAll('#compOptions .option-btn').forEach(b=>b.disabled=true);
+    }
+    function nextComparativo() { if (!compAnsweredFlag && !confirm("Pular?")) return; compIndex=(compIndex+1)%comparativoItems.length; if(compIndex===0){ compHits=0; compHitsSpan.innerText="0"; } loadComparativo(); }
+    function resetComparativo() { compIndex=0; compHits=0; loadComparativo(); }
+    nextCompBtn.onclick = nextComparativo;
+    resetCompBtn.onclick = resetComparativo;
+    loadComparativo();
+
+    // Mapa Interativo com anotações
+    const listaSeq = document.getElementById('sequenciaLista');
+    function mostrarConteudo(texto, key) {
+        let notaSalva = localStorage.getItem(`nota_s6_${key}`) || '';
+        listaSeq.innerHTML = `<div class="sequencia-item">
+            ${texto}
+            <button class="btn-nota" data-key="${key}" aria-label="Adicionar anotação">📝</button>
+            <div class="nota-texto" id="nota-${key}" style="${notaSalva ? '' : 'display:none;'}">${notaSalva ? '✏️ ' + notaSalva : ''}</div>
+        </div>`;
+        const btnNota = listaSeq.querySelector('.btn-nota');
+        if (btnNota) {
+            btnNota.addEventListener('click', (e) => {
+                let novaNota = prompt('Digite sua anotação pessoal:', notaSalva);
+                if (novaNota !== null) {
+                    localStorage.setItem(`nota_s6_${key}`, novaNota);
+                    document.getElementById(`nota-${key}`).innerHTML = '✏️ ' + novaNota;
+                    document.getElementById(`nota-${key}`).style.display = 'block';
+                }
+            });
+        }
+    }
+    document.querySelectorAll('#tabInterativo .info-btn').forEach(btn => {
+        const key = btn.getAttribute('data-info');
+        if (key && conteudosMapa[key]) {
+            btn.addEventListener('click', () => { mostrarConteudo(conteudosMapa[key], key); });
+        }
+    });
+
+    // TABS
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            contents.forEach(c => c.classList.remove('active-tab'));
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active-tab');
+        });
+    });
+</script>
+</body>
+</html>

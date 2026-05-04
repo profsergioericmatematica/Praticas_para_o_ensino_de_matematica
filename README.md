@@ -1,567 +1,114 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Práticas para o Ensino da Matemática I - Univesp | Semana 7</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
-            background: #eef2f8; padding: 24px 16px; color: #1a2c3e;
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
-        .btn-voltar-fixo {
-            position: fixed; bottom: 24px; left: 24px; background: #1f4e6e; color: white;
-            padding: 12px 20px; border-radius: 40px; text-decoration: none; font-weight: bold;
-            font-size: 0.95rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999;
-            display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;
-        }
-        .btn-voltar-fixo:hover { background: #2c7da0; transform: translateY(-3px); }
-        @media (max-width: 780px) { .btn-voltar-fixo { bottom: 16px; left: 16px; padding: 10px 16px; font-size: 0.85rem; } }
-        .app-header { text-align: center; margin-bottom: 28px; padding: 0 16px; }
-        .app-header h1 { color: #1f4e6e; font-size: 1.8rem; margin-bottom: 8px; font-weight: 800; }
-        .app-header h2 { color: #2c7da0; font-size: 1.15rem; font-weight: 500; }
-        .app-footer { margin-top: auto; text-align: center; padding: 24px 16px 16px; font-size: 0.95rem; color: #334155; }
-        .app-footer a { color: #1f7a5a; text-decoration: none; font-weight: bold; }
-        .app-container { max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; width: 100%; }
-        .main-panel { flex: 2; min-width: 280px; background: white; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 40px; }
-        .tab-bar { display: flex; flex-wrap: wrap; background: #f1f5f9; border-bottom: 1px solid #cbd5e1; }
-        .tab-btn { flex: 1; padding: 12px 8px; font-weight: bold; background: transparent; border: none; cursor: pointer; font-size: 0.9rem; transition: 0.2s; color: #334155; }
-        .tab-btn.active { background: white; color: #0f2b3d; border-bottom: 3px solid #2c7da0; }
-        .download-pdf { background: #2c7da0; color: white; border: none; border-radius: 40px; padding: 6px 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin: 8px 12px 8px auto; display: flex; align-items: center; gap: 6px; text-decoration: none; }
-        .download-pdf:hover { background: #1f5e7a; }
-        .tab-content { padding: 1.8rem; display: none; }
-        .tab-content.active-tab { display: block; }
-        .flashcard-3d { background-color: transparent; width: 100%; min-height: 320px; perspective: 1000px; cursor: pointer; }
-        .flashcard-inner { position: relative; width: 100%; height: 100%; min-height: 320px; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 1.5rem; }
-        .flashcard-3d.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flash-front, .flash-back { position: absolute; width: 100%; min-height: 320px; backface-visibility: hidden; border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .flash-front { background: #f8fafd; border: 2px solid #e2edf2; color: #1f4e6e; }
-        .flash-back { background: #1f4e6e; color: white; transform: rotateY(180deg); border: 2px solid #2c7da0; }
-        .flash-sigla { font-size: 1.6rem; font-weight: 800; }
-        .flash-desc { font-size: 0.9rem; margin-top: 1rem; line-height: 1.4; }
-        .flash-example { font-size: 0.8rem; margin-top: 1rem; font-style: italic; }
-        .flash-nav { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
-        .flash-nav button, .mode-reset { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-weight: 500; }
-        .mode-reset { background: #cbd5e1; margin-left: 12px; }
-        .scenario-card { background: #f8fafd; border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; border-left: 6px solid #2c7da0; font-size: 1rem; font-weight: 500; }
-        .btn-hint { background: #ffecb3; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; margin-right: 8px; }
-        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 1.5rem 0; }
-        .option-btn { background: white; border: 1.5px solid #cbd5e1; border-radius: 60px; padding: 12px; font-weight: 500; font-size: 0.85rem; cursor: pointer; text-align: center; }
-        .option-btn:hover { background: #e2edf2; border-color: #2c7da0; }
-        .feedback-area { background: #f1f5f9; border-radius: 1.2rem; padding: 1rem; margin-top: 1rem; }
-        .explanation { display: none; background: #e9f4fe; padding: 1rem; border-radius: 1rem; margin-top: 0.8rem; font-size: 0.9rem; }
-        .next-btn { background: #1f7a5a; color: white; border: none; border-radius: 40px; padding: 10px 24px; font-weight: bold; cursor: pointer; margin-top: 1rem; display: none; width: 100%; }
-        .score-bar { display: flex; justify-content: space-between; background: #eef2f5; border-radius: 60px; padding: 10px 18px; margin-top: 20px; align-items: center; flex-wrap: wrap; gap: 8px; }
-        .theory-panel { flex: 1.2; min-width: 260px; background: white; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.08); position: sticky; top: 20px; max-height: 85vh; overflow-y: auto; }
-        .theory-header { background: #1f4e6e; color: white; padding: 1rem 1.5rem; border-radius: 2rem 2rem 0 0; font-weight: bold; }
-        .theory-content { padding: 1.2rem 1.5rem; }
-        .concept-grid { display: grid; gap: 12px; font-size: 0.85rem; margin-bottom: 1rem; }
-        .concept-card { background: #f8fafc; padding: 12px; border-radius: 16px; border-left: 4px solid #2c7da0; line-height: 1.4; }
-        .gold-dicas { background: #fef7e0; border-radius: 1rem; padding: 1rem; margin-top: 0.5rem; font-size: 0.85rem; }
-        .sequencia-area { background: #fefce8; border-radius: 1.5rem; padding: 1.2rem; margin-top: 10px; border-left: 6px solid #2c7da0; }
-        .sequencia-header h3 { font-size: 1.2rem; color: #1f4e6e; margin-bottom: 16px; }
-        .sequencia-lista { max-height: 400px; overflow-y: auto; padding-right: 8px; }
-        .sequencia-item { background: white; padding: 12px 16px; margin-bottom: 10px; border-radius: 1rem; border-left: 4px solid #2c7da0; font-size: 0.9rem; position: relative; }
-        .btn-nota { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px; vertical-align: middle; }
-        .nota-texto { display: block; margin-top: 8px; font-size: 0.8rem; background: #fef7e0; padding: 8px; border-radius: 8px; }
-        .button-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
-        .info-btn { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 40px; padding: 8px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
-        .info-btn:hover { background: #e2edf2; border-color: #2c7da0; transform: translateY(-2px); }
-        .categoria-titulo { font-weight: bold; margin: 15px 0 8px 0; color: #1f4e6e; width: 100%; border-left: 3px solid #2c7da0; padding-left: 8px; }
-        @keyframes confete { 0% { opacity: 1; transform: translateY(0) rotate(0deg); } 100% { opacity: 0; transform: translateY(-100px) rotate(720deg); } }
-        .confete { position: fixed; bottom: 0; left: 50%; width: 10px; height: 10px; background: gold; animation: confete 1s ease-out forwards; pointer-events: none; z-index: 10000; }
-        button:focus-visible, a:focus-visible { outline: 2px solid #2c7da0; outline-offset: 2px; }
-        @media (max-width: 780px) { .app-container { flex-direction: column; } .theory-panel { position: static; max-height: none; } }
-        @media (max-width: 320px) { .info-btn { min-width: 100px; font-size: 0.7rem; padding: 6px 8px; } .tab-btn { font-size: 0.75rem; padding: 8px 4px; } }
-    </style>
-</head>
-<body>
-<a href="index.html" class="btn-voltar-fixo" aria-label="Voltar ao menu principal">⬅️ Voltar ao Menu</a>
-<header class="app-header">
-    <h1>Práticas para o Ensino da Matemática I - Univesp</h1>
-    <h2>Semana 7 - Problematizações em contextos de probabilidade e estatística</h2>
-    <div style="margin-top: 10px;"><button id="audioToggleBtn" aria-label="Ativar/desativar sons" style="background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer;">🔊 Som ativado</button></div>
-</header>
-<div class="app-container">
-    <div class="main-panel">
-        <div class="tab-bar">
-            <button class="tab-btn active" data-tab="flash">📇 Flashcards</button>
-            <button class="tab-btn" data-tab="quiz">🎯 Quiz</button>
-            <button class="tab-btn" data-tab="assoc">🔗 Associação</button>
-            <button class="tab-btn" data-tab="comparativo">📊 Comparativo (V/F)</button>
-            <button class="tab-btn" data-tab="interativo">🧠 Mapa Interativo</button>
-            <a href="SEP401_apostila_semana7.pdf" target="_blank" class="download-pdf" title="Abrir resumo Semana 7 em PDF">📄 Resumo S7 (PDF)</a>
-        </div>
+# 🧮 Práticas para o Ensino de Matemática I - Univesp
 
-        <!-- FLASHCARDS -->
-        <div id="tabFlash" class="tab-content active-tab">
-            <div style="display: flex; justify-content: flex-end;"><button id="resetFlashMode" class="mode-reset">🔄 Reiniciar Flashcards</button></div>
-            <div class="flashcard-3d" id="flashcard3d" tabindex="0" role="button">
-                <div class="flashcard-inner">
-                    <div class="flash-front"><div class="flash-sigla" id="frontSigla">Carregando...</div><div class="flash-desc">Clique para virar</div></div>
-                    <div class="flash-back"><div class="flash-sigla" id="backSigla"></div><div class="flash-desc" id="backDesc"></div><div class="flash-example" id="backExample"></div></div>
-                </div>
-            </div>
-            <div id="flashCounter" style="text-align:center; margin-top:15px;"></div>
-            <div class="flash-nav"><button id="prevFlash">◀ Anterior</button><button id="nextFlash">Próxima ▶</button></div>
-        </div>
+Uma aplicação web interativa e gamificada desenvolvida para auxiliar estudantes na revisão e fixação dos conceitos teóricos da disciplina **Práticas para o Ensino de Matemática I** do curso de licenciatura da **UNIVESP**.
 
-        <!-- QUIZ -->
-        <div id="tabQuiz" class="tab-content">
-            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-                <button id="resetQuizMode" class="mode-reset">🔄 Reiniciar Quiz</button>
-                <button id="revisarErrosBtn" class="mode-reset" style="display: none;">📚 Revisar erros</button>
-            </div>
-            <div id="scenarioCard" class="scenario-card">Carregando...</div>
-            <div><button id="hintBtn" class="btn-hint">💡 Dica</button><div id="hintBox" style="background:#fff8e7; padding:0.5rem; border-radius:1rem; display:none; margin-top:0.5rem;"></div></div>
-            <div id="optionsContainer" class="options-grid"></div>
-            <div class="feedback-area"><div id="feedbackMsg" class="feedback-text"></div><div id="explanationBox" class="explanation"></div><button id="nextBtn" class="next-btn">➡️ Próxima questão</button></div>
-            <div class="score-bar"><span>✅ Acertos: <span id="hitsCount">0</span></span><span>📋 Restantes: <span id="remainingCount">0</span></span></div>
-            <div id="quizConcluidoMsg" style="display: none; margin-top: 15px; background: #d4edda; padding: 10px; border-radius: 12px; text-align: center;">🏆 Parabéns! Você concluiu o quiz. Use "Revisar erros" para fixar.</div>
-        </div>
+## 🎯 Objetivo do Projeto
+Transformar o estudo teórico de metodologias, história da educação matemática e taxonomias do conhecimento docente (como MTSK, MKT e TPACK) em uma experiência dinâmica. O projeto substitui a leitura passiva por atividades ativas, utilizando metodologias de gamificação e navegação interativa.
 
-        <!-- ASSOCIAÇÃO -->
-        <div id="tabAssoc" class="tab-content">
-            <div style="display: flex; justify-content: flex-end;"><button id="resetAssocMode" class="mode-reset">🔄 Reiniciar Associação</button></div>
-            <div id="assocQuestion" class="scenario-card">Relacione o conceito: <br><br><strong id="assocSigla"></strong></div>
-            <div id="assocOptions" class="options-grid"></div>
-            <div id="assocFeedback" class="feedback-text" style="margin-top:1rem;"></div>
-            <button id="nextAssoc" class="next-btn" style="display:block; background:#2c7da0;">Próxima associação ➡️</button>
-            <div style="margin-top:12px;">Acertos: <span id="assocHits">0</span> / <span id="assocTotal">0</span></div>
-        </div>
+## 📚 Estrutura do Curso
+O conteúdo da aplicação está organizado ao longo de 7 semanas de estudo, cobrindo os seguintes temas:
+* **Semana 1:** Práticas para o ensino de matemática I: entre concepções matemáticas e práticas pedagógicas
+* **Semana 2:** O professor que ensina matemática hoje e a importância de seus conhecimentos profissionais
+* **Semana 3:** O sentido dos números e das operações no currículo e nas práticas pedagógicas dos professores
+* **Semana 4:** Pensamento algébrico e álgebra no decorrer do currículo e suas implicações nas práticas pedagógicas dos professores
+* **Semana 5:** Conceitos e propriedades da geometria na educação básica e suas implicações nas práticas pedagógicas
+* **Semana 6:** Estudos e práticas pedagógicas de grandezas e medidas
+* **Semana 7:** Problematizações em contextos de probabilidade e estatística que refletem nas práticas pedagógicas
 
-        <!-- COMPARATIVO (Verdadeiro/Falso) -->
-        <div id="tabComparativo" class="tab-content">
-            <div style="display: flex; justify-content: flex-end;"><button id="resetCompMode" class="mode-reset">🔄 Reiniciar</button></div>
-            <div id="compQuestion" class="scenario-card"><strong>📌 Analise a afirmação sobre Probabilidade e Estatística:</strong><br><br><span id="compConcept"></span></div>
-            <div id="compOptions" class="options-grid"></div>
-            <div id="compFeedback" class="feedback-text" style="margin-top:1rem;"></div>
-            <button id="nextComp" class="next-btn" style="display:block; background:#2c7da0;">Próxima ➡️</button>
-            <div style="margin-top:12px;">Acertos: <span id="compHits">0</span> / <span id="compTotal">0</span></div>
-        </div>
+## ✨ Funcionalidades
+O aplicativo é dividido por semanas de estudo, onde cada semana (1, 2, 3, 4, 5, 6  e 7) oferece um conjunto completo de ferramentas de aprendizagem:
 
-        <!-- MAPA INTERATIVO -->
-        <div id="tabInterativo" class="tab-content">
-            <div class="button-grid">
-                <div class="categoria-titulo">📊 Letramento Estatístico</div>
-                <button class="info-btn" data-info="letramento_estatistico">Letramento Estatístico (Gal, 2002)</button>
-                <button class="info-btn" data-info="ciclo_ppdac">Ciclo Investigativo PPDAC</button>
-                <button class="info-btn" data-info="variaveis_estatisticas">Variáveis estatísticas (qualitativas nominais/ordinais, quantitativas discretas/contínuas)</button>
-                <button class="info-btn" data-info="representacoes_graficas">Representações gráficas (tipos e indicações)</button>
-                <button class="info-btn" data-info="manipulacao_graficos">Manipulação em gráficos: eixo truncado, escala inadequada</button>
-                <div class="categoria-titulo">🎲 Pensamento Probabilístico</div>
-                <button class="info-btn" data-info="aleatoriedade">Aleatoriedade × determinismo</button>
-                <button class="info-btn" data-info="probabilidade_classica">Probabilidade clássica (espaço amostral, eventos, razão favoráveis/possíveis)</button>
-                <button class="info-btn" data-info="letramento_probabilistico">Letramento probabilístico (Gal, 2005)</button>
-                <div class="categoria-titulo">🧪 Metodologias e práticas</div>
-                <button class="info-btn" data-info="tarefa_casa_sonolenta">Tarefa: Casa sonolenta (anos iniciais)</button>
-                <button class="info-btn" data-info="tarefa_colunas_gigantes">Tarefa: Colunas gigantes (gráfico truncado)</button>
-                <button class="info-btn" data-info="tarefa_descobrir_aleatorio">Tarefa: Descobrindo o aleatório (probabilidade)</button>
-                <button class="info-btn" data-info="ostensivos_estatistica">Ostensivos no ensino de estatística (material concreto, cores, cubos)</button>
-                <div class="categoria-titulo">📚 BNCC e Estatística/Probabilidade</div>
-                <button class="info-btn" data-info="bncc_anos_iniciais_ep">Anos Iniciais: coleta, tabelas, pictogramas, gráficos de barras</button>
-                <button class="info-btn" data-info="bncc_anos_finais_ep">Anos Finais: médias, moda, mediana, amplitude, amostragem, análise crítica</button>
-                <button class="info-btn" data-info="bncc_em_ep">Ensino Médio: pesquisa amostral, desvio-padrão, notação científica, interpretação de índices (IDH, inflação), tomada de decisão em risco</button>
-                <div class="categoria-titulo">🔍 Pesquisa e reflexão</div>
-                <button class="info-btn" data-info="papel_ostensivos">Papel dos ostensivos na representação de variáveis qualitativas (Cazorla et al., 2020)</button>
-                <button class="info-btn" data-info="registros_semioticos">Registros de representação semiótica na Estatística (Duval)</button>
-                <button class="info-btn" data-info="postura_critica_estatistica">Postura crítica: questionar fontes, datas, legendas, escalas</button>
-            </div>
-            <div class="sequencia-area">
-                <div class="sequencia-header"><h3>📌 Conteúdo selecionado</h3></div>
-                <div id="sequenciaLista" class="sequencia-lista"><div class="sequencia-item" style="color:#64748b;">Clique em um botão acima para ver o conteúdo.</div></div>
-            </div>
-        </div>
-    </div>
+### 📇 Flashcards 3D
+Cartões interativos de frente e verso para memorização ativa de siglas, conceitos, tendências pedagógicas, gerações da profissão docente, propriedades do SND, sentidos das operações e conceitos algébricos. Basta clicar no cartão para virar e conferir a resposta.
 
-    <!-- PAINEL TEÓRICO LATERAL -->
-    <div class="theory-panel">
-        <div class="theory-header">📖 Síntese Teórica - Semana 7</div>
-        <div class="theory-content">
-            <div class="concept-grid">
-                <div class="concept-card"><strong>📊 Letramento Estatístico (Gal, 2002):</strong> Capacidade de interpretar, avaliar criticamente e comunicar informações estatísticas. Envolve conhecimento (matemático, estatístico, contexto) e disposição (crenças, postura crítica).</div>
-                <div class="concept-card"><strong>🔄 Ciclo PPDAC:</strong> Problema → Planejamento → Dados → Análise → Conclusão. Metodologia central para ensino investigativo.</div>
-                <div class="concept-card"><strong>📋 Variáveis:</strong> Qualitativas (nominais e ordinais) e Quantitativas (discretas e contínuas).</div>
-                <div class="concept-card"><strong>📈 Gráficos:</strong> Setores (proporções), barras/colunas (comparações), histogramas (dados contínuos), pictogramas. Elementos essenciais: título, eixos identificados, legenda, fonte.</div>
-                <div class="concept-card"><strong>⚠️ Gráfico truncado:</strong> eixo vertical não começa no zero, amplifica diferenças visualmente. Deve ser evitado para garantir ética e clareza.</div>
-                <div class="concept-card"><strong>🎲 Aleatoriedade:</strong> Fenômeno cujo resultado não pode ser previsto com certeza. Rompe com a “ideologia da certeza”.</div>
-                <div class="concept-card"><strong>📐 Probabilidade clássica (Laplace):</strong> P(A) = n(A)/n(S), com resultados equiprováveis.</div>
-                <div class="concept-card"><strong>🧠 Letramento probabilístico (Gal, 2005):</strong> Interpretar mensagens de chance e tomar decisões fundamentadas em situações de incerteza.</div>
-            </div>
-            <div class="gold-dicas">💡 Dicas: Use o ciclo PPDAC para tornar a estatística investigativa. Analise gráficos da mídia criticamente. Trabalhe a diferença entre aleatório e determinístico. Valorize o letramento, não só os cálculos.</div>
-        </div>
-    </div>
-</div>
-<footer class="app-footer">
-    Desenvolvido por Prof. Sergio Eric | Instagram: <a href="https://instagram.com/prof.sergio.eric.matematica" target="_blank">@prof.sergio.eric.matematica</a> | 2026
-</footer>
+### 🎯 Quiz Interativo
+Questões de múltipla escolha focadas na aplicação prática da teoria, com sistema de dicas, feedback imediato e explicações detalhadas. A pontuação e o número de questões restantes são exibidos em tempo real.
 
-<script>
-    // ===================== DADOS =====================
-    const flashcards = [
-        { sigla: "Letramento Estatístico", nome: "Letramento Estatístico", desc: "Capacidade de interpretar, avaliar criticamente e comunicar informações estatísticas (Gal, 2002).", exemplo: "Ler gráfico de barras com título, fonte e escala adequada." },
-        { sigla: "PPDAC", nome: "Ciclo PPDAC", desc: "Problema – Planejamento – Dados – Análise – Conclusão. Metodologia investigativa em estatística.", exemplo: "Pesquisa sobre fruta favorita da turma." },
-        { sigla: "Variável Nominal", nome: "Qualitativa Nominal", desc: "Categorias sem ordenação natural.", exemplo: "Cor favorita, gênero, tipo de moradia." },
-        { sigla: "Variável Ordinal", nome: "Qualitativa Ordinal", desc: "Categorias com ordenação lógica.", exemplo: "Nível de escolaridade, escala de concordância (gosto muito, gosto pouco, não gosto)." },
-        { sigla: "Variável Discreta", nome: "Quantitativa Discreta", desc: "Valores inteiros, resultado de contagem.", exemplo: "Número de irmãos, quantidade de alunos." },
-        { sigla: "Variável Contínua", nome: "Quantitativa Contínua", desc: "Valores resultantes de medição, qualquer valor em intervalo.", exemplo: "Altura, peso, temperatura." },
-        { sigla: "Gráfico truncado", nome: "Gráfico truncado", desc: "Eixo vertical não começa no zero, causando distorção visual.", exemplo: "Coluna de 122 parece o dobro de 109." },
-        { sigla: "Aleatoriedade", nome: "Aleatoriedade", desc: "Resultado incerto mesmo quando o processo é conhecido.", exemplo: "Lançar um dado, sorteio de carta, previsão do tempo." },
-        { sigla: "Espaço amostral", nome: "Espaço amostral", desc: "Conjunto de todos os resultados possíveis de um experimento aleatório.", exemplo: "S = {1,2,3,4,5,6} para um dado." },
-        { sigla: "Evento", nome: "Evento", desc: "Subconjunto do espaço amostral.", exemplo: "Sair número par = {2,4,6}." },
-        { sigla: "Probabilidade clássica", nome: "Probabilidade clássica", desc: "P(A) = nº casos favoráveis / nº casos possíveis (equiprováveis).", exemplo: "P(sair cara) = 1/2." },
-        { sigla: "Moda", nome: "Moda", desc: "Valor que mais se repete.", exemplo: "Na sequência 2,2,5,7 → moda = 2." },
-        { sigla: "Mediana", nome: "Mediana", desc: "Valor central após ordenação.", exemplo: "Em 3,7,9 → mediana = 7." },
-        { sigla: "Média", nome: "Média aritmética", desc: "Soma dos valores dividida pela quantidade.", exemplo: "(2+4+6)/3 = 4." }
-    ];
+### 🔗 Jogo de Associação
+Atividade rápida para relacionar definições a seus respectivos conceitos ou autores. O usuário deve escolher a opção correta entre as alternativas apresentadas.
 
-    const quizQuestions = [
-        { text: "O ciclo investigativo PPDAC (Problema, Planejamento, Dados, Análise, Conclusão) é uma metodologia didática para:", correct: "Ensinar estatística de forma investigativa, aproximando os estudantes de situações reais", options: ["Ensinar apenas a construção de gráficos", "Ensinar cálculo de probabilidade", "Ensinar estatística de forma investigativa, aproximando os estudantes de situações reais", "Substituir a matemática tradicional"], hint: "Etapas de uma pesquisa completa.", explanation: "O PPDAC permite que o aluno vivencie todas as etapas de uma pesquisa, desenvolvendo letramento estatístico." },
-        { text: "Qual das seguintes alternativas é um exemplo de variável qualitativa ordinal?", correct: "Nível de satisfação (muito insatisfeito, insatisfeito, neutro, satisfeito, muito satisfeito)", options: ["Cor dos olhos", "Altura em metros", "Nível de satisfação (muito insatisfeito, insatisfeito, neutro, satisfeito, muito satisfeito)", "Número de filhos"], hint: "Há ordenação nas categorias.", explanation: "Variável ordinal tem uma ordem lógica entre as categorias." },
-        { text: "Em um gráfico de colunas que busca representar fielmente os dados, o eixo vertical deve:", correct: "Começar no zero", options: ["Começar no menor valor da amostra", "Começar no zero", "Começar no maior valor", "Não ter escala"], hint: "Evitar distorção visual.", explanation: "Para evitar leituras equivocadas, o eixo vertical deve começar em zero, especialmente em gráficos de barras/colunas." },
-        { text: "O letramento estatístico, segundo Gal (2002), envolve:", correct: "Conhecimentos (matemático, estatístico, contexto) e elementos de disposição (crenças, postura crítica)", options: ["Apenas o domínio de fórmulas e cálculos", "Apenas a capacidade de construir gráficos", "Conhecimentos (matemático, estatístico, contexto) e elementos de disposição (crenças, postura crítica)", "Saber ler rótulos de produtos"], hint: "Não é só técnica.", explanation: "Letramento estatístico articula saber e saber-ser crítico." },
-        { text: "A probabilidade clássica (Laplace) é definida como:", correct: "Número de casos favoráveis dividido pelo número de casos possíveis, desde que todos sejam equiprováveis", options: ["Número de casos favoráveis dividido pelo número de casos possíveis, desde que todos sejam equiprováveis", "Frequência relativa após muitos experimentos", "Opinião subjetiva", "Resultado de um experimento aleatório"], hint: "Definição tradicional.", explanation: "P(A) = n(A)/n(S), com resultados igualmente prováveis." },
-        { text: "Qual das seguintes situações NÃO é um exemplo de fenômeno aleatório?", correct: "O sol nascer amanhã", options: ["Lançar uma moeda", "O sol nascer amanhã", "Sortear uma carta de um baralho", "Prever o resultado de uma partida de futebol"], hint: "Determinístico, conhecido com certeza.", explanation: "O nascer do sol é um evento determinístico, previsível, não aleatório." },
-        { text: "De acordo com a BNCC, nos anos iniciais o trabalho com estatística deve priorizar:", correct: "Coleta, organização e representação de dados com pictogramas e gráficos de barras", options: ["Cálculo de desvio-padrão", "Coleta, organização e representação de dados com pictogramas e gráficos de barras", "Construção de boxplots", "Amostragem estratificada"], hint: "Crianças pequenas.", explanation: "As habilidades iniciais são de coleta, contagem e representações simples." },
-        { text: "Em uma pesquisa sobre o Índice de Desenvolvimento Humano (IDH) de cidades brasileiras, uma aluna afirmou que 'o IDH médio da região Sudeste é 0,780'. Essa afirmação mobiliza conhecimentos de:", correct: "Interpretação crítica de índices e medidas estatísticas", options: ["Apenas aritmética", "Interpretação crítica de índices e medidas estatísticas", "Probabilidade condicional", "Aleatoriedade"], hint: "Contexto social e econômico.", explanation: "Interpretar índices como IDH exige letramento estatístico para entender seu significado social." }
-    ];
+### 📊 Painel Comparativo
+Exercícios de classificação específicos para cada semana:
+- **Semana 1:** Discursos Economicista vs. Crítico sobre avaliações em larga escala.
+- **Semana 2:** Conceitos de Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, entre outros.
+- **Semana 3:** Afirmações sobre algoritmos tradicionais vs. estratégias de decomposição (classificar como Verdadeiro ou Falso, com justificativa).
+- **Semana 4:** Tendências do ensino de álgebra (Linguístico-pragmática, Fundamentalista-estrutural, Fundamentalista-analógica) – classifique as afirmações.
+- **Semana 5:** Afirmações sobre fundamentos da geometria (poliedros convexos, relação de Euler, direção vs. sentido, planificação, etc.) – classifique como Verdadeiro ou Falso.
+- **Semana 6:** Afirmações sobre fundamentos da medição (diferença entre grandeza e medida, relação v = d/u, princípios de iteração, conservação, etc.) – classifique como Verdadeiro ou Falso.
+- **Semana 7:** Afirmações sobre letramento estatístico e probabilístico (componentes do letramento estatístico, ciclo PPDAC, variáveis, gráficos truncados, probabilidade clássica, aleatoriedade) – classifique como Verdadeiro ou Falso.
 
-    const associacoes = [
-        { termo: "Ciclo PPDAC", definicao: "Problema – Planejamento – Dados – Análise – Conclusão." },
-        { termo: "Variável quantitativa discreta", definicao: "Valores inteiros, resultado de contagem." },
-        { termo: "Variável qualitativa nominal", definicao: "Categorias sem ordenação, como cor favorita." },
-        { termo: "Gráfico truncado", definicao: "Eixo vertical não começa no zero, distorcendo a percepção." },
-        { termo: "Espaço amostral", definicao: "Conjunto de todos os resultados possíveis de um experimento aleatório." },
-        { termo: "Moda", definicao: "Medida de tendência central que indica o valor que mais se repete." },
-        { termo: "Aleatoriedade", definicao: "Incapacidade de prever o resultado com certeza antes da ocorrência." }
-    ];
+### 🧠 Mapa Interativo
+Um sistema de **botões clicáveis** que exibe, sob demanda, conteúdos detalhados sobre cada tópico da semana.  
+- **Semana 1:** botões para Tataravô, Bisavô, Avô, Pai, todas as tendências pedagógicas (Formalista Clássica, Empírico-Ativista, etc.), SAEB, TIMSS 2023, discursos sobre avaliação, Escuta Nacional de Professores (2025) e Políticas Públicas (PNE).  
+- **Semana 2:** botões para Matemática Acadêmica vs. Escolar, Transposição Didática, Construção Autônoma, Professor vs. Pesquisador, Modelos Shulman, MKT, MTSK, TPACK, Saberes da Ação Pedagógica e Não Saberes.  
+- **Semana 3:** botões para Sistema de Numeração Decimal (propriedades posicional, multiplicativa, aditiva), sentidos do número (cardinal, ordinal, medida, nominal, estimativa), sentidos da adição (juntar, acrescentar), subtração (retirar, completar, comparar), multiplicação (parcelas iguais, configuração retangular, combinatória), divisão (partilha equitativa, medida), algoritmo tradicional vs. decomposição, tampinhas coloridas, material dourado e ábaco.
+- **Semana 4:** botões para evolução histórica da álgebra (fases retórica, sincopada, simbólica), pensamento algébrico vs. álgebra como artefato, três tendências do ensino de álgebra, pilares do pensamento algébrico (generalizar, formalizar, argumentar), BNCC (anos iniciais, anos finais, ensino médio), tarefas práticas (Jogo do Tum-pá, colar de contas, dividindo a cidade, cabo de guerra), desafios (transformismo algébrico, sinal de igual relacional, ensino exploratório).
+- **Semana 5:** botões para fundamentos da geometria (origem, abandono curricular, desenvolvimento do pensamento geométrico), localização e movimentação (direção vs. sentido, referencial, mapas), geometria espacial (poliedros convexos/não convexos, corpos redondos, relação de Euler, planificação, prismas e pirâmides), recursos didáticos (materiais manipuláveis, tecnologias digitais, desconstrução dimensional), BNCC (anos iniciais, anos finais, ensino médio), pesquisa de Pavanello & Franco (diálogo artificial, efeito Topázio, imprecisões conceituais, negociação de significados).
+- **Semana 6:** botões para fundamentos da medição (grandeza, unidade de medida, instrumento de medida, medida), princípios do pensamento métrico (iteração, partição, transitividade, conservação, acumulação da distância), conceitos de área e perímetro (incluindo figuras com vazados), relação inversa v = d/u, evolução na BNCC (anos iniciais, finais, ensino médio), pesquisa MTSK sobre área e perímetro (Feitosa & Rodrigues, 2025), tarefas práticas (qual é o mais pesado?, afinal, qual o valor da área?, comparando volumes).
+- **Semana 7:** botões para letramento estatístico (conceito e componentes), ciclo investigativo PPDAC, tipos de variáveis (qualitativas nominais/ordinais, quantitativas discretas/contínuas), representações gráficas (setores, barras, histogramas) e manipulação (eixo truncado, escala inadequada), fundamentos da probabilidade (aleatoriedade, espaço amostral, eventos, probabilidade clássica), letramento probabilístico, metodologias e práticas (tarefas "Casa sonolenta", "Colunas gigantes", "Descobrindo o aleatório"), uso de ostensivos no ensino de estatística (Cazorla et al., 2020), registros de representação semiótica (Duval), BNCC (anos iniciais, anos finais, ensino médio) e postura crítica diante de dados.
 
-    const comparativoItems = [
-        { afirmacao: "O letramento estatístico envolve apenas conhecimento matemático (cálculos e fórmulas).", tipo: "Falso", explicacao: "Envolve também conhecimento do contexto, postura crítica e crenças." },
-        { afirmacao: "No ciclo PPDAC, a etapa 'Análise' é quando os dados são coletados.", tipo: "Falso", explicacao: "Coleta de dados é a etapa 'Dados'. Análise é o tratamento e interpretação." },
-        { afirmacao: "Variáveis qualitativas ordinais apresentam uma ordenação natural entre as categorias.", tipo: "Verdadeiro", explicacao: "Exemplo: escolaridade (fundamental, médio, superior)." },
-        { afirmacao: "Em gráficos de colunas, o eixo vertical deve começar no zero para evitar distorções.", tipo: "Verdadeiro", explicacao: "Eixo truncado amplifica diferenças e pode induzir a interpretações falsas." },
-        { afirmacao: "A probabilidade clássica é definida como a frequência relativa de um evento após infinitas repetições.", tipo: "Falso", explicacao: "Essa é a interpretação frequentista; a clássica é razão entre casos favoráveis e possíveis." }
-    ];
+**Diferencial:** Cada clique **substitui** o conteúdo exibido anteriormente (não acumula), mantendo a área de visualização sempre limpa e focada no último tópico selecionado. Não há botão de "limpar" – a própria substituição já organiza o estudo por tópico.
 
-    const conteudosMapa = {
-        letramento_estatistico: "📊 Letramento Estatístico (Gal, 2002): Capacidade de interpretar, avaliar criticamente e comunicar informações estatísticas. Componentes: conhecimento matemático, conhecimento estatístico, conhecimento do contexto, perguntas críticas, crenças e atitudes, postura crítica.",
-        ciclo_ppdac: "🔄 Ciclo Investigativo PPDAC: 1) Problema (questão clara), 2) Planejamento (amostra, instrumentos), 3) Dados (coleta e organização), 4) Análise (tabelas, gráficos, medidas), 5) Conclusão (interpretação e comunicação). Metodologia central para ensino de estatística.",
-        variaveis_estatisticas: "📋 Variáveis estatísticas: Qualitativas (nominais – sem ordenação; ordinais – com ordenação) e Quantitativas (discretas – contagem, inteiros; contínuas – medição, qualquer valor). Exemplos: cor (nominal), escolaridade (ordinal), nº de filhos (discreto), altura (contínua).",
-        representacoes_graficas: "📈 Gráficos: setores (proporção do todo), barras/colunas (comparação entre categorias), histograma (variáveis contínuas), pictograma (anos iniciais). Elementos obrigatórios: título, eixos identificados, legenda, fonte. Escala deve começar no zero.",
-        manipulacao_graficos: "⚠️ Manipulação em gráficos: eixo vertical truncado (não começa no zero) amplifica diferenças e engana visualmente. Exemplo: 122 parece ser o dobro de 109. Deve-se reconstruir gráfico com eixo começando em zero para correta interpretação.",
-        aleatoriedade: "🎲 Aleatoriedade: fenômeno cujo resultado não pode ser previsto com certeza, mesmo conhecendo-se o processo. Ex: lançamento de dado, sorteio. Determinismo: resultado previsível (ex: nascer do sol). Romper com a 'ideologia da certeza' é fundamental.",
-        probabilidade_classica: "📐 Probabilidade clássica (Laplace): P(A) = número de casos favoráveis / número de casos possíveis, desde que todos os resultados sejam equiprováveis. Ex: P(cara em moeda honesta) = 1/2. Espaço amostral S e evento A ⊂ S.",
-        letramento_probabilistico: "🧠 Letramento probabilístico (Gal, 2005): competência para interpretar mensagens de chance e tomar decisões fundamentadas em situações de incerteza (saúde, finanças, meteorologia, jogos).",
-        tarefa_casa_sonolenta: "🏠 Tarefa 'Casa sonolenta' (anos iniciais): coleta de dados sobre tipo de moradia dos funcionários da escola. Uso de pictograma com tampinhas, gráfico de barras, tabela de contagem. Desenvolve coleta, organização e interpretação inicial.",
-        tarefa_colunas_gigantes: "📊 Tarefa 'Colunas gigantes' (anos finais): apresentar dados de ações trabalhistas com eixo vertical truncado (100-125), causando distorção. Reconstruir com eixo a partir do zero (0-140). Debate sobre intencionalidade, ética e manipulação de gráficos.",
-        tarefa_descobrir_aleatorio: "🎲 Tarefa 'Descobrindo o aleatório' (anos iniciais/finais): analisar situações e classificar entre aleatórias e não aleatórias. Exemplo: 'possibilidade de chover' – discutir fatores (estação, região) – nem completamente aleatório, nem determinístico.",
-        ostensivos_estatistica: "🧩 Ostensivos no ensino de estatística: materiais concretos (camisetas coloridas, fichas, cubos estatísticos, tampinhas) ajudam crianças a representar e transformar variáveis qualitativas. Facilitam a passagem do concreto para o abstrato (gráficos, tabelas).",
-        bncc_anos_iniciais_ep: "📚 BNCC – Anos Iniciais (Estatística): coleta, organização, representação de dados (pictogramas, gráficos de barras, tabelas). Leitura de informações simples. Início da noção de aleatoriedade (possível, impossível, provável).",
-        bncc_anos_finais_ep: "📚 BNCC – Anos Finais (Estatística): médias (média, moda, mediana), amplitude, diferença entre censo e amostra, tipos de amostragem. Análise crítica de gráficos da mídia. Planejamento e execução de pesquisa amostral.",
-        bncc_em_ep: "📚 BNCC – Ensino Médio (Estatística e Probabilidade): EM13MAT202 – planejar pesquisa amostral; EM13MAT104 – interpretar taxas (IDH, inflação); EM13MAT313 – notação científica e erros de medida; EM13MAT316 – desvio-padrão; tomada de decisão em risco (probabilidade).",
-        papel_ostensivos: "🔍 Pesquisa (Cazorla et al., 2020): objetos ostensivos (camisetas coloridas, cubos, fichas) facilitam a compreensão de variáveis qualitativas e a transformação entre registros (real → icônico → gráfico → numérico).",
-        registros_semioticos: "📝 Registros de representação semiótica (Duval): tratamento (mesmo registro), conversão (mudança de registro). Ex: dados em lista → tabela → gráfico de barras. Coordenação: identificar mesmo objeto em diferentes representações.",
-        postura_critica_estatistica: "🔎 Postura crítica: questionar a fonte dos dados, data da pesquisa, legendas, escalas, truncamento de eixos, omissão de informações. Fundamental para não aceitar informações manipuladas ou falsas."
-    };
+### 📖 Síntese Teórica
+Um painel lateral de consulta rápida com os resumos essenciais dos textos base e videoaulas, disponível em todas as semanas.
 
-    // ===================== LÓGICA (SOM, FLASHCARDS, QUIZ, ASSOC, COMP, MAPA) =====================
-    // Som
-    let somAtivado = localStorage.getItem('somAtivado_s7') !== 'false';
-    const audioToggle = document.getElementById('audioToggleBtn');
-    function playSom(tipo) {
-        if (!somAtivado) return;
-        try {
-            let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            gain.gain.value = 0.1;
-            if (tipo === 'acerto') { osc.frequency.value = 880; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5); }
-            else if (tipo === 'erro') { osc.frequency.value = 440; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5); }
-            else if (tipo === 'flash') { osc.frequency.value = 660; gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3); }
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
-        } catch(e) {}
-    }
-    audioToggle.textContent = somAtivado ? "🔊 Som ativado" : "🔇 Som desativado";
-    audioToggle.addEventListener('click', () => { somAtivado = !somAtivado; localStorage.setItem('somAtivado_s7', somAtivado); audioToggle.textContent = somAtivado ? "🔊 Som ativado" : "🔇 Som desativado"; });
+### 📄 Download de Resumos (PDF)
+Acesso rápido aos resumos gerados em LaTeX padronizados para impressão (arquivos `SEP401_apostila_semana1.pdf`, `SEP401_apostila_semana2.pdf`, `SEP401_apostila_semana3.pdf`, `SEP401_apostila_semana4.pdf`, `SEP401_apostila_semana5.pdf`, `SEP401_apostila_semana6.pdf` e `SEP401_apostila_semana7.pdf`).
 
-    // Flashcards
-    let flashIndex = 0, isFlipped = false;
-    const flashContainer = document.getElementById('flashcard3d');
-    const frontSigla = document.getElementById('frontSigla');
-    const backSigla = document.getElementById('backSigla');
-    const backDesc = document.getElementById('backDesc');
-    const backExample = document.getElementById('backExample');
-    const flashCounter = document.getElementById('flashCounter');
-    function updateFlash() {
-        const item = flashcards[flashIndex % flashcards.length];
-        frontSigla.innerText = item.sigla;
-        backSigla.innerText = `${item.sigla}`;
-        backDesc.innerText = item.desc;
-        backExample.innerText = `📘 Exemplo: ${item.exemplo}`;
-        flashCounter.innerText = `${flashIndex+1}/${flashcards.length}`;
-        if (isFlipped) { flashContainer.classList.remove('flipped'); isFlipped=false; }
-    }
-    function flipCard() { flashContainer.classList.toggle('flipped'); isFlipped=!isFlipped; playSom('flash'); }
-    function prevFlash() { flashIndex=(flashIndex-1+flashcards.length)%flashcards.length; updateFlash(); }
-    function nextFlash() { flashIndex=(flashIndex+1)%flashcards.length; updateFlash(); }
-    function resetFlash() { flashIndex=0; updateFlash(); if(isFlipped) flipCard(); }
-    document.getElementById('prevFlash').onclick = prevFlash;
-    document.getElementById('nextFlash').onclick = nextFlash;
-    document.getElementById('resetFlashMode').onclick = resetFlash;
-    flashContainer.onclick = flipCard;
-    updateFlash();
-    document.addEventListener('keydown', (e) => {
-        if (document.getElementById('tabFlash').classList.contains('active-tab')) {
-            if (e.key === 'ArrowLeft') { prevFlash(); e.preventDefault(); }
-            else if (e.key === 'ArrowRight') { nextFlash(); e.preventDefault(); }
-        }
-    });
+## 🛠️ Tecnologias Utilizadas
+Este projeto foi construído puramente com tecnologias web padrão (Vanilla), garantindo leveza e fácil hospedagem:
+* **HTML5:** Estruturação semântica e suporte a áudio (para feedback sonoro opcional).
+* **CSS3:** Estilização responsiva (Mobile First), layouts com Flexbox/Grid, animações 3D nativas e efeitos visuais de transição.
+* **JavaScript:** Lógica de manipulação do DOM, controle de pontuações, embaralhamento de questões, navegação por abas e substituição dinâmica de conteúdo no Mapa Interativo.
 
-    // Quiz
-    let quizCurrent = 0, quizHits = 0, quizAnswered = false;
-    let questoesErradas = [];
-    let modoRevisao = false;
-    let questoesRevisao = [];
-    let revisaoIndex = 0;
-    const quizTotal = quizQuestions.length;
-    const scenarioDiv = document.getElementById('scenarioCard');
-    const optionsDiv = document.getElementById('optionsContainer');
-    const hintBtn = document.getElementById('hintBtn');
-    const hintBox = document.getElementById('hintBox');
-    const feedbackMsg = document.getElementById('feedbackMsg');
-    const explanationBox = document.getElementById('explanationBox');
-    const nextBtn = document.getElementById('nextBtn');
-    const hitsSpan = document.getElementById('hitsCount');
-    const remainingSpan = document.getElementById('remainingCount');
-    const resetQuizBtn = document.getElementById('resetQuizMode');
-    const revisarErrosBtn = document.getElementById('revisarErrosBtn');
-    const quizConcluidoMsg = document.getElementById('quizConcluidoMsg');
-    function mostrarConfete() { for (let i=0;i<30;i++) { let c=document.createElement('div'); c.className='confete'; c.style.left=Math.random()*100+'%'; c.style.backgroundColor=`hsl(${Math.random()*360},80%,60%)`; document.body.appendChild(c); setTimeout(()=>c.remove(),1000); } }
-    function carregarQuiz() {
-        quizAnswered = false;
-        const q = modoRevisao ? questoesRevisao[revisaoIndex] : quizQuestions[quizCurrent];
-        scenarioDiv.innerHTML = modoRevisao ? `[REVISÃO] ${q.text}` : q.text;
-        feedbackMsg.innerHTML = "";
-        explanationBox.style.display = "none";
-        hintBox.style.display = "none";
-        nextBtn.style.display = "none";
-        hintBtn.disabled = false;
-        optionsDiv.innerHTML = "";
-        q.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => checkQuizAnswer(opt, q);
-            optionsDiv.appendChild(btn);
-        });
-        remainingSpan.innerText = modoRevisao ? questoesRevisao.length - revisaoIndex : quizTotal - quizCurrent;
-        hitsSpan.innerText = quizHits;
-        document.querySelectorAll('.option-btn').forEach(b=>b.disabled=false);
-    }
-    function checkQuizAnswer(selected, q) {
-        if (quizAnswered) return;
-        quizAnswered = true;
-        const isCorrect = (selected === q.correct);
-        if (isCorrect) {
-            feedbackMsg.innerHTML = `✅ Correto! "${selected}" é a resposta certa.`;
-            feedbackMsg.style.color = "#1f7a5a";
-            if (!modoRevisao) quizHits++;
-            playSom('acerto');
-        } else {
-            feedbackMsg.innerHTML = `❌ Incorreto. A resposta certa é "${q.correct}".`;
-            feedbackMsg.style.color = "#c0392b";
-            if (!modoRevisao) questoesErradas.push(q);
-            else questoesRevisao.push(q);
-            playSom('erro');
-        }
-        hitsSpan.innerText = quizHits;
-        explanationBox.innerHTML = `<strong>📖 Explicação:</strong><br>${q.explanation}<br><br><strong>🔍 Dica:</strong> ${q.hint}`;
-        explanationBox.style.display = "block";
-        nextBtn.style.display = "block";
-        hintBtn.disabled = true;
-        document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
-    }
-    function avancarQuiz() {
-        if (!quizAnswered) return;
-        if (modoRevisao) {
-            revisaoIndex++;
-            if (revisaoIndex < questoesRevisao.length) carregarQuiz();
-            else {
-                scenarioDiv.innerHTML = `🏆 Revisão concluída! Acertos totais: ${quizHits}/${quizTotal}.`;
-                optionsDiv.innerHTML = "";
-                nextBtn.style.display = "none";
-                revisarErrosBtn.style.display = "none";
-                feedbackMsg.innerHTML = "";
-                explanationBox.style.display = "none";
-                remainingSpan.innerText = "0";
-                modoRevisao = false;
-                quizConcluidoMsg.style.display = 'block';
-                mostrarConfete();
-            }
-        } else {
-            quizCurrent++;
-            if (quizCurrent < quizTotal) carregarQuiz();
-            else {
-                scenarioDiv.innerHTML = `🏆 Concluído! Acertos: ${quizHits}/${quizTotal}.`;
-                optionsDiv.innerHTML = "";
-                nextBtn.style.display = "none";
-                feedbackMsg.innerHTML = "";
-                explanationBox.style.display = "none";
-                remainingSpan.innerText = "0";
-                if (questoesErradas.length > 0) {
-                    revisarErrosBtn.style.display = "inline-block";
-                    quizConcluidoMsg.style.display = 'block';
-                } else {
-                    revisarErrosBtn.style.display = "none";
-                    quizConcluidoMsg.style.display = 'block';
-                    mostrarConfete();
-                }
-            }
-        }
-    }
-    function iniciarRevisao() {
-        if (questoesErradas.length === 0) return;
-        modoRevisao = true;
-        questoesRevisao = [...questoesErradas];
-        revisaoIndex = 0;
-        revisarErrosBtn.style.display = "none";
-        quizConcluidoMsg.style.display = 'none';
-        carregarQuiz();
-    }
-    function resetQuiz() { quizCurrent=0; quizHits=0; questoesErradas=[]; modoRevisao=false; revisarErrosBtn.style.display="none"; quizConcluidoMsg.style.display="none"; carregarQuiz(); }
-    nextBtn.onclick = avancarQuiz;
-    resetQuizBtn.onclick = resetQuiz;
-    revisarErrosBtn.onclick = iniciarRevisao;
-    hintBtn.onclick = () => { if(!quizAnswered) hintBox.innerHTML = `💡 ${(modoRevisao ? questoesRevisao[revisaoIndex] : quizQuestions[quizCurrent]).hint}`; hintBox.style.display="block"; };
-    carregarQuiz();
+## 🚀 Como executar o projeto
+1. Faça o clone ou download deste repositório.
+2. Não é necessária nenhuma instalação ou configuração de servidor complexo.
+3. Basta abrir o ficheiro `index.html` em qualquer navegador moderno (Chrome, Firefox, Edge, Safari).
+4. *(Recomendado)* Para que a função de abrir/baixar os PDFs locais funcione sem bloqueios de segurança dos navegadores, utilize uma extensão de servidor local, como o **Live Server** no VS Code.
+5. Navegue entre as semanas clicando nos botões do menu principal e, dentro de cada semana, explore as abas (Flashcards, Quiz, Associação, Comparativo, Mapa Interativo).
 
-    // Associação
-    function shuffleArray(arr) { for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
-    let assocIndex=0, assocHits=0, assocAnsweredFlag=false;
-    const assocSiglaSpan = document.getElementById('assocSigla');
-    const assocOptionsDiv = document.getElementById('assocOptions');
-    const assocFeedback = document.getElementById('assocFeedback');
-    const nextAssocBtn = document.getElementById('nextAssoc');
-    const assocHitsSpan = document.getElementById('assocHits');
-    const assocTotalSpan = document.getElementById('assocTotal');
-    const resetAssocBtn = document.getElementById('resetAssocMode');
-    assocTotalSpan.innerText = associacoes.length;
-    function loadAssociation() {
-        assocAnsweredFlag = false;
-        const current = associacoes[assocIndex];
-        assocSiglaSpan.innerText = current.termo;
-        let otherDefs = associacoes.filter(item => item.termo !== current.termo).map(item => item.definicao);
-        otherDefs = shuffleArray([...otherDefs]).slice(0,3);
-        let options = shuffleArray([current.definicao, ...otherDefs]);
-        assocOptionsDiv.innerHTML = "";
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => checkAssociation(opt, current.definicao);
-            assocOptionsDiv.appendChild(btn);
-        });
-        assocFeedback.innerHTML = "";
-    }
-    function checkAssociation(selected, correct) {
-        if (assocAnsweredFlag) return;
-        assocAnsweredFlag = true;
-        if (selected === correct) { assocFeedback.innerHTML = "✅ Correta!"; assocFeedback.style.color="#1f7a5a"; assocHits++; playSom('acerto'); }
-        else { assocFeedback.innerHTML = `❌ Errado. Correta: "${correct}"`; assocFeedback.style.color="#c0392b"; playSom('erro'); }
-        assocHitsSpan.innerText = assocHits;
-        document.querySelectorAll('#assocOptions .option-btn').forEach(b=>b.disabled=true);
-    }
-    function nextAssociation() { if (!assocAnsweredFlag && !confirm("Pular?")) return; assocIndex=(assocIndex+1)%associacoes.length; if(assocIndex===0){ assocHits=0; assocHitsSpan.innerText="0"; } loadAssociation(); }
-    function resetAssoc() { assocIndex=0; assocHits=0; loadAssociation(); }
-    nextAssocBtn.onclick = nextAssociation;
-    resetAssocBtn.onclick = resetAssoc;
-    loadAssociation();
+## 📁 Estrutura de arquivos
 
-    // Comparativo
-    let compIndex=0, compHits=0, compAnsweredFlag=false;
-    const compConceptSpan = document.getElementById('compConcept');
-    const compOptionsDiv = document.getElementById('compOptions');
-    const compFeedback = document.getElementById('compFeedback');
-    const nextCompBtn = document.getElementById('nextComp');
-    const compHitsSpan = document.getElementById('compHits');
-    const compTotalSpan = document.getElementById('compTotal');
-    const resetCompBtn = document.getElementById('resetCompMode');
-    compTotalSpan.innerText = comparativoItems.length;
-    function loadComparativo() {
-        compAnsweredFlag = false;
-        const current = comparativoItems[compIndex];
-        compConceptSpan.innerText = `"${current.afirmacao}"`;
-        compOptionsDiv.innerHTML = "";
-        const options = ["Verdadeiro", "Falso"];
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => checkComparativo(opt, current.tipo, current.explicacao);
-            compOptionsDiv.appendChild(btn);
-        });
-        compFeedback.innerHTML = "";
-    }
-    function checkComparativo(selected, correct, explicacao) {
-        if (compAnsweredFlag) return;
-        compAnsweredFlag = true;
-        if (selected === correct) { compFeedback.innerHTML = `✅ Correta! ${explicacao}`; compFeedback.style.color="#1f7a5a"; compHits++; playSom('acerto'); }
-        else { compFeedback.innerHTML = `❌ Incorreto. ${explicacao}`; compFeedback.style.color="#c0392b"; playSom('erro'); }
-        compHitsSpan.innerText = compHits;
-        document.querySelectorAll('#compOptions .option-btn').forEach(b=>b.disabled=true);
-    }
-    function nextComparativo() { if (!compAnsweredFlag && !confirm("Pular?")) return; compIndex=(compIndex+1)%comparativoItems.length; if(compIndex===0){ compHits=0; compHitsSpan.innerText="0"; } loadComparativo(); }
-    function resetComparativo() { compIndex=0; compHits=0; loadComparativo(); }
-    nextCompBtn.onclick = nextComparativo;
-    resetCompBtn.onclick = resetComparativo;
-    loadComparativo();
+projeto/
 
-    // Mapa Interativo com anotações
-    const listaSeq = document.getElementById('sequenciaLista');
-    function mostrarConteudo(texto, key) {
-        let notaSalva = localStorage.getItem(`nota_s7_${key}`) || '';
-        listaSeq.innerHTML = `<div class="sequencia-item">
-            ${texto}
-            <button class="btn-nota" data-key="${key}" aria-label="Adicionar anotação">📝</button>
-            <div class="nota-texto" id="nota-${key}" style="${notaSalva ? '' : 'display:none;'}">${notaSalva ? '✏️ ' + notaSalva : ''}</div>
-        </div>`;
-        const btnNota = listaSeq.querySelector('.btn-nota');
-        if (btnNota) {
-            btnNota.addEventListener('click', (e) => {
-                let novaNota = prompt('Digite sua anotação pessoal:', notaSalva);
-                if (novaNota !== null) {
-                    localStorage.setItem(`nota_s7_${key}`, novaNota);
-                    document.getElementById(`nota-${key}`).innerHTML = '✏️ ' + novaNota;
-                    document.getElementById(`nota-${key}`).style.display = 'block';
-                }
-            });
-        }
-    }
-    document.querySelectorAll('#tabInterativo .info-btn').forEach(btn => {
-        const key = btn.getAttribute('data-info');
-        if (key && conteudosMapa[key]) {
-            btn.addEventListener('click', () => { mostrarConteudo(conteudosMapa[key], key); });
-        }
-    });
+|-- index.html
 
-    // TABS
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabId = tab.getAttribute('data-tab');
-            contents.forEach(c => c.classList.remove('active-tab'));
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active-tab');
-        });
-    });
-</script>
-</body>
-</html>
+|-- semana1.html
+
+|-- semana2.html
+
+|-- semana3.html
+
+|-- semana4.html
+
+|-- semana5.html
+
+|-- semana6.html
+
+|-- semana7.html
+
+|-- SEP401_apostila_semana1.pdf
+
+|-- SEP401_apostila_semana2.pdf
+
+|-- SEP401_apostila_semana3.pdf
+
+|-- SEP401_apostila_semana4.pdf
+
+|-- SEP401_apostila_semana5.pdf
+
+|-- SEP401_apostila_semana6.pdf
+
+|-- SEP401_apostila_semana7.pdf
+
+|-- README.md
+
+|-- LICENSE
+
+
+## 👨‍🏫 Autor
+Desenvolvido com 💡 por **Prof. Sergio Eric Reis de Oliveira** | Acompanhe no Instagram: [@prof.sergio.eric.matematica](https://instagram.com/prof.sergio.eric.matematica)
+
+## 📄 Licença
+Este projeto está sob a licença MIT. Veja o ficheiro [LICENSE](LICENSE) para mais detalhes.
